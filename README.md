@@ -1,6 +1,6 @@
 <h1 align="center">Vue-drag-resize</h1>
 
-> Vue2 Component for draggable and resizable elements.
+> Vue Component for draggable and resizable elements.
 
 ## Table of Contents
 
