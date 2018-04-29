@@ -15,7 +15,7 @@
   "bugs": {
     "url": "https://github.com/kirillmurashov/vue-drag-resize/issues"
   },
-  "homepage": "https://kirillmurashov.com/drag-resize",
+  "homepage": "https://github.com/kirillmurashov/vue-drag-resize.git",
   "dependencies": {
     "vue": "^2.5.16"
   },
