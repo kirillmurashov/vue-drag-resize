@@ -5,12 +5,9 @@
 ## Table of Contents
 
 * [Features](#features)
-* [Demo](#demo)
 * [Install and basic usage](#install-and-basic-usage)
   * [Props](#props)
   * [Events](#events)
-* [Gotchas](#gotchas)
-* [Roadmap](#roadmap)
 * [Contributing](#contributing)
 * [License](#license)
 
