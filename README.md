@@ -23,7 +23,7 @@
 ## Install and basic usage
 
 ```bash
-$ npm i --save vue-drag-resize
+$ npm i -s vue-drag-resize
 ```
 
 

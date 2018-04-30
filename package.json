@@ -16,10 +16,8 @@
     "url": "https://github.com/kirillmurashov/vue-drag-resize/issues"
   },
   "homepage": "https://github.com/kirillmurashov/vue-drag-resize.git",
-  "dependencies": {
-    "vue": "^2.5.16"
-  },
   "devDependencies": {
+    "vue": "^2.5.16",
     "acorn-dynamic-import": "^3.0.0",
     "autoprefixer": "^6.7.2",
     "babel": "^6.23.0",
