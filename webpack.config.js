@@ -51,6 +51,11 @@ module.exports = {
 
     module: {
         rules: [
+
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader'
+            },
             {
                 test: /\.js$/,
                 exclude: /(node_modules|bower_components)/,
@@ -59,12 +64,8 @@ module.exports = {
                 }
             },
             {
-                test: /\.vue$/,
-                loader: 'vue-loader'
-            },
-            {
                 test: /\.css$/,
-                use: [ 'style-loader', 'css-loader' ]
+                use: [ 'style-loader', 'css-loader', 'postcss-loader' ]
             }
         ]
     },
@@ -82,7 +83,8 @@ module.exports = {
     output: {
         path: config.build.distPath,
         library: 'VueDragResize',
-        filename: '[name].js'
+        filename: '[name].js',
+        libraryTarget: 'umd'
     },
 
     optimization: {

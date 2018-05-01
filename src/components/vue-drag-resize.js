@@ -144,6 +144,8 @@ export default {
         document.documentElement.removeEventListener('mouseup', this.up);
         document.documentElement.removeEventListener('mouseleave', this.up);
 
+        document.documentElement.removeEventListener('mousedown', this.deselect);
+
         document.documentElement.removeEventListener('touchmove', this.move, true);
         document.documentElement.removeEventListener('touchend touchcancel', this.up, true);
         document.documentElement.removeEventListener('touchstart', this.up, true);
@@ -178,9 +180,11 @@ export default {
 
         bodyDown: function (ev) {
             this.active = true;
-            if (!this.draggable || !this.active) {
+
+            if (!this.isDraggable || !this.active) {
                 return
             }
+
             const parentWidth = this.parentWidth;
             const parentHeight = this.parentHeight;
 
@@ -206,6 +210,7 @@ export default {
                     maxBottom: parentHeight - this.height
                 };
             }
+
         },
 
         bodyMove(ev) {
@@ -229,7 +234,7 @@ export default {
         },
 
         stickDown: function (stick, ev) {
-            if (!this.resizable || !this.active) {
+            if (!this.isResizable || !this.active) {
                 return
             }
             this.stickDrag = true;
@@ -456,6 +461,7 @@ export default {
 
             this.left = newLeft;
         },
+
         rawRight(newRight) {
             const limits = this.limits;
             const stickAxis = this.stickAxis;
@@ -479,6 +485,7 @@ export default {
 
             this.right = newRight;
         },
+
         rawTop(newTop) {
             const limits = this.limits;
             const stickAxis = this.stickAxis;
@@ -502,6 +509,7 @@ export default {
 
             this.top = newTop;
         },
+
         rawBottom(newBottom) {
             const limits = this.limits;
             const stickAxis = this.stickAxis;
