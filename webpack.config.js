@@ -48,7 +48,11 @@ if(config.build.bundleAnalyzerReport){
 }
 
 module.exports = {
-
+    resolve: {
+        alias: {
+            vue: 'vue/dist/vue.common.js'
+        }
+    },
     module: {
         rules: [
 

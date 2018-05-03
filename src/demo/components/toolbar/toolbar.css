@@ -1,0 +1,76 @@
+:root{
+    --toolbar-width: 220px;
+}
+.toolbar{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: var(--toolbar-width);
+    padding:  15px 15px 0 15px;
+    box-shadow: 0 0 2px #AAA;
+    box-sizing: border-box;
+    background-color: white;
+    margin: 30px 30px 30px 0;
+}
+.toolbar-wh-row{
+
+    margin-bottom: 20px;
+}
+.toolbar-row-title{
+    width: var(--toolbar-width);
+    font-size: 14px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 500;
+    margin: 0 0 3px 0;
+    color: #1A173B;
+}
+.toolbar-position-inp, .toolbar-size-inp{
+    width: 90px;
+    font-size: 11px;
+    color: #BBB;
+    font-weight: 300;
+    display: inline-block;
+    position: relative;
+}
+
+.toolbar-size-inp input,.toolbar-position-inp input{
+    width: 70px;
+    display: inline-block;
+    border: 1px solid #bfbfca;
+    margin-top: 2px;
+    height: 16px;
+}
+
+.toolbar-size-inp input[disabled],.toolbar-position-inp input[disabled]{
+    border: 1px solid #dcdce7;
+    color: #AAAAAA;
+}
+
+.position-lock-icon, .size-lock-icon{
+    position: absolute;
+    bottom: 3px;
+    right: 17px;
+    cursor: pointer;
+}
+.size-lock-icon{
+    bottom: 2px;
+    right: -3px;
+}
+
+.toolbar-check-inp{
+    color: #445477;
+    font-size: 13px;
+    width: 180px;
+    display: inline-block;
+    margin: 2px 0;
+}
+.toolbar-row-title+label{
+    margin-top: 5px;
+}
+.toolbar-check-inp input{
+    border: 1px solid #bfbfca;
+}
+.to-top-icon, .to-bottom-icon{
+    margin: 10px 30px;
+    cursor: pointer;
+}

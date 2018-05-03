@@ -1,6 +1,6 @@
 module.exports = {
     entry: {
-        "app": './src/app.js'
+        "app": './src/demo/app.js'
     },
     build: {
         env: '"development"',

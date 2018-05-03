@@ -76,7 +76,7 @@ export default {
             type: String,
             default: 'both',
             validator: function (val) {
-                return ['x', 'y', 'both'].indexOf(val) !== -1
+                return ['x', 'y', 'both', 'none'].indexOf(val) !== -1
             }
         }
     },
@@ -97,7 +97,9 @@ export default {
             left: this.x,
             top: this.y,
             right: null,
-            bottom: null
+            bottom: null,
+            minWidth: this.minw,
+            minHeight: this.minh
         }
     },
 
@@ -152,7 +154,7 @@ export default {
     },
 
     methods: {
-        deselect(ev){
+        deselect(ev) {
             this.active = false
         },
 
@@ -215,22 +217,35 @@ export default {
 
         bodyMove(ev) {
             const stickStartPos = this.stickStartPos;
+
             let delta = {
-                x: this.axis !== 'y' ? stickStartPos.mouseX - ev.x : 0,
-                y: this.axis !== 'x' ? stickStartPos.mouseY - ev.y : 0
+                x: this.axis !== 'y' && this.axis !== 'none' ? stickStartPos.mouseX - ev.x : 0,
+                y: this.axis !== 'x' && this.axis !== 'none' ? stickStartPos.mouseY - ev.y : 0
             };
 
             this.rawTop = stickStartPos.top - delta.y;
             this.rawBottom = stickStartPos.bottom + delta.y;
             this.rawLeft = stickStartPos.left - delta.x;
             this.rawRight = stickStartPos.right + delta.x;
-            this.$emit('dragging', {left:this.left, top: this.top, width:this.width, height:this.height});
+            this.$emit('dragging', this.rect);
         },
 
         bodyUp() {
             this.bodyDrag = false;
-            this.$emit('dragging', {left:this.left, top: this.top, width:this.width, height:this.height});
-            this.$emit('dragstop', {left:this.left, top: this.top, width:this.width, height:this.height});
+            this.$emit('dragging', this.rect);
+            this.$emit('dragstop', this.rect);
+
+            this.stickStartPos = {mouseX: 0, mouseY: 0, x: 0, y: 0, w: 0, h: 0};
+            this.limits = {
+                minLeft: null,
+                maxLeft: null,
+                minRight: null,
+                maxRight: null,
+                minTop: null,
+                maxTop: null,
+                minBottom: null,
+                maxBottom: null
+            };
         },
 
         stickDown: function (stick, ev) {
@@ -264,9 +279,10 @@ export default {
                     break;
             }
 
+
             if (this.parentLimitation) {
-                let minw = this.minw;
-                let minh = this.minh;
+                let minw = this.minWidth;
+                let minh = this.minHeight;
                 const aspectFactor = this.aspectFactor;
                 const width = this.width;
                 const height = this.height;
@@ -358,7 +374,7 @@ export default {
                     break;
             }
 
-            this.$emit('resizing', {left: this.left, top: this.top, width: this.width, height: this.height});
+            this.$emit('resizing', this.rect);
         },
 
         stickUp() {
@@ -371,7 +387,16 @@ export default {
                 w: 0,
                 h: 0
             };
-
+            this.limits = {
+                minLeft: null,
+                maxLeft: null,
+                minRight: null,
+                maxRight: null,
+                minTop: null,
+                maxTop: null,
+                minBottom: null,
+                maxBottom: null
+            };
             this.rawTop = this.top;
             this.rawBottom = this.bottom;
             this.rawLeft = this.left;
@@ -379,8 +404,8 @@ export default {
 
             this.stickAxis = null;
 
-            this.$emit('resizing', {left:this.left, top: this.top, width:this.width, height:this.height});
-            this.$emit('resizestop', {left:this.left, top: this.top, width:this.width, height:this.height});
+            this.$emit('resizing', this.rect);
+            this.$emit('resizestop', this.rect);
         },
 
         aspectRatioCorrection() {
@@ -434,6 +459,15 @@ export default {
 
         height() {
             return this.parentHeight - this.top - this.bottom;
+        },
+
+        rect(){
+            return {
+                left: Math.round(this.left),
+                top: Math.round(this.top),
+                width: Math.round(this.width),
+                height: Math.round(this.height)
+            }
         }
     },
 
@@ -542,21 +576,39 @@ export default {
             this.aspectRatioCorrection();
         },
 
-        active(isActive){
-            if(isActive){
+        active(isActive) {
+            if (isActive) {
                 this.$emit('activated');
-            }else{
+            } else {
                 this.$emit('deactivated');
             }
         },
 
-        isActive(val){
+        isActive(val) {
             this.active = val;
         },
 
-        z: function (val) {
+        z(val) {
             if (val >= 0 || val === 'auto') {
                 this.zIndex = val
+            }
+        },
+
+        aspectRatio(val) {
+            if (val) {
+                this.aspectFactor = this.width / this.height;
+            }
+        },
+
+        minw(val) {
+            if (val > 0 && val <= this.width) {
+                this.minWidth = val
+            }
+        },
+
+        minh(val) {
+            if (val > 0 && val <= this.height) {
+                this.minHeight = val
             }
         }
     }

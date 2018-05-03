@@ -1,0 +1,62 @@
+<div class="toolbar" @mousedown.stop>
+    <div class="toolbar-wh-row">
+        <p class="toolbar-row-title">Position</p>
+        <span class="toolbar-position-inp">top
+            <input :value="top" disabled />
+
+            <svgicon name="lock"
+                     :color="topIsLocked ? '#42b983 #35495e' : '#AAA'"
+                     width="15"
+                     height="15"
+                     class="position-lock-icon"
+                     @click.native="toggleYLock"
+            ></svgicon>
+        </span>
+        <span class="toolbar-position-inp">left
+            <input :value="left" disabled  />
+            <svgicon name="lock"
+                     :color="leftIsLocked ? '#42b983 #35495e' : '#AAA'"
+                     width="15"
+                     height="15"
+                     class="position-lock-icon"
+                     @click.native="toggleXLock"
+            ></svgicon>
+        </span>
+    </div>
+    <div class="toolbar-wh-row">
+        <p class="toolbar-row-title">Size</p>
+        <span class="toolbar-size-inp">width
+            <input :value="width" disabled />
+            <svgicon name="lock"
+                     :color="aspectRatio ? '#42b983 #35495e' : '#AAA'"
+                     width="17"
+                     height="17"
+                     class="size-lock-icon"
+                     @click.native="toggleAspect"
+            ></svgicon>
+        </span>
+        <span class="toolbar-size-inp">height
+            <input :value="height" disabled />
+        </span>
+    </div>
+
+    <div class="toolbar-wh-row">
+        <p class="toolbar-row-title">Minimal size</p>
+        <span class="toolbar-size-inp">width
+            <input :value="minw" :disabled="activeRect === null" @keyup="changeMinWidth" />
+        </span>
+        <span class="toolbar-size-inp">height
+            <input :value="minh" :disabled="activeRect === null" @keyup="changeMinHeight" />
+        </span>
+    </div>
+
+    <div class="toolbar-wh-row">
+        <p class="toolbar-row-title">Restrictions</p>
+        <label class="toolbar-check-inp"><input type="checkbox" @change="toggleResizable" :checked="resizable" :disabled="activeRect === null" /> isResizable</label>
+        <label class="toolbar-check-inp"><input type="checkbox" @change="toggleDraggable" :checked="draggable" :disabled="activeRect === null" /> isDraggable</label>
+        <label class="toolbar-check-inp"><input type="checkbox" @change="toggleParentLimitation" :checked="parentLim" :disabled="activeRect === null" /> parentLimitation</label>
+
+        <svgicon name="toBottom" :color="activeRect!==null && zIndex !== 'isFirst' ? '#35495e' : '#AAA'" width="30" height="30" class="to-bottom-icon" @click.native="toBottom"></svgicon>
+        <svgicon name="toTop" :color="activeRect!==null && zIndex !== 'isLast' ? '#35495e' : '#AAA'" width="30" height="30" class="to-top-icon" @click.native="toTop"></svgicon>
+    </div>
+</div>

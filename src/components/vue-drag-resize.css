@@ -5,10 +5,15 @@
 .vdr {
     position: absolute;
     box-sizing: border-box;
-    border: 1px dashed rgba(0,0,0,0);
 }
-.vdr.active {
-    border: 1px dashed #d6d6d6;
+.vdr.active:before{
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    box-sizing: border-box;
+    outline: 1px dashed #d6d6d6;
 }
 .vdr-stick {
     box-sizing: border-box;
@@ -66,4 +71,7 @@
     bottom: calc(var(--stick-size)/-2);
     right: calc(var(--stick-size)/-2);
     cursor: nwse-resize;
+}
+.vdr-stick.not-resizable{
+    display: none;
 }

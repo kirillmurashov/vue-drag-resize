@@ -1,6 +1,7 @@
 module.exports = {
     entry: {
-        "index": './src'
+        "index": './src',
+        "demo": './src/demo/app'
     },
     build: {
         env: '"production"',

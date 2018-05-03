@@ -11,6 +11,10 @@
 * [Contributing](#contributing)
 * [License](#license)
 
+### Demo
+
+[Demo](http://kirillmurashov.com/vue-drag-resize)
+
 ### Features
 
 * A lightweight, no-dependency 
@@ -237,7 +241,7 @@ Type: `String`<br>
 Required: `false`<br>
 Default: `both`
 
-Define the axis on which the element is draggable. Available values are `x`, `y` or `both`.
+Define the axis on which the element is draggable. Available values are `x`, `y`, `both` or `none`.
 
 ```html
 <vue-drag-resize axis="x">
