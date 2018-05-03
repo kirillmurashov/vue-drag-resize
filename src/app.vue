@@ -1,10 +1,11 @@
 <template>
     <div id="app">
-        <VueDragResize :isActive="true" :w="200" :h="200" v-on:resizing="resize" v-on:dragging="resize">
+        <VueDragResize :isActive="true" :w="200" :h="200" :parentLimitation="false" v-on:resizing="resize" v-on:dragging="resize">
             <h3>Hello World!</h3>
             <p>{{ top }} х {{ left }} </p>
             <p>{{ width }} х {{ height }}</p>
         </VueDragResize>
+
     </div>
 </template>
 
@@ -16,6 +17,8 @@
         box-sizing: border-box;
         width: 600px;
         height: 800px;
+
+        position: relative;
     }
 
     h3 {

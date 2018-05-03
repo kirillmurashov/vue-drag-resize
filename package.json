@@ -1,7 +1,7 @@
 {
   "name": "vue-drag-resize",
-  "version": "1.0.2",
-  "description": "Vue Component for resiza and drag elements",
+  "version": "1.0.3",
+  "description": "Vue Component for resize and drag elements",
   "author": "Kirill Murashov <me@kirillmurashov.com>",
   "main": "dist/index.js",
   "scripts": {

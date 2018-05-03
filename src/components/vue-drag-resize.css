@@ -3,7 +3,7 @@
 }
 
 .vdr {
-    position: relative;
+    position: absolute;
     box-sizing: border-box;
     border: 1px dashed rgba(0,0,0,0);
 }
