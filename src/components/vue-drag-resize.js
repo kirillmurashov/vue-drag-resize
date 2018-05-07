@@ -187,9 +187,6 @@ export default {
                 return
             }
 
-            const parentWidth = this.parentWidth;
-            const parentHeight = this.parentHeight;
-
             this.bodyDrag = true;
 
             this.stickStartPos.mouseX = ev.x;
@@ -199,6 +196,13 @@ export default {
             this.stickStartPos.right = this.right;
             this.stickStartPos.top = this.top;
             this.stickStartPos.bottom = this.bottom;
+
+            this.calcDragLimitation();
+        },
+
+        calcDragLimitation(){
+            const parentWidth = this.parentWidth;
+            const parentHeight = this.parentHeight;
 
             if (this.parentLimitation) {
                 this.limits = {
@@ -212,7 +216,6 @@ export default {
                     maxBottom: parentHeight - this.height
                 };
             }
-
         },
 
         bodyMove(ev) {
@@ -610,6 +613,20 @@ export default {
             if (val > 0 && val <= this.height) {
                 this.minHeight = val
             }
+        },
+
+        x(){
+            this.calcDragLimitation();
+            let delta = this.x - this.left;
+            this.rawLeft = this.x;
+            this.rawRight = this.right - delta;
+        },
+
+        y(){
+            this.calcDragLimitation();
+            let delta = this.y - this.top;
+            this.rawTop = this.y;
+            this.rawBottom = this.bottom - delta;
         }
     }
 }

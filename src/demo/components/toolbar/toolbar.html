@@ -2,7 +2,7 @@
     <div class="toolbar-wh-row">
         <p class="toolbar-row-title">Position</p>
         <span class="toolbar-position-inp">top
-            <input :value="top" disabled />
+            <input :value="top" @keyup="changeTop" />
 
             <svgicon name="lock"
                      :color="topIsLocked ? '#42b983 #35495e' : '#AAA'"
@@ -13,7 +13,7 @@
             ></svgicon>
         </span>
         <span class="toolbar-position-inp">left
-            <input :value="left" disabled  />
+            <input :value="left" @keyup="changeLeft" />
             <svgicon name="lock"
                      :color="leftIsLocked ? '#42b983 #35495e' : '#AAA'"
                      width="15"

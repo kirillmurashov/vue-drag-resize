@@ -60,7 +60,7 @@ export default {
                 this.$store.state.rect.rects[this.activeRect].axis === 'none')
         },
 
-        zIndex(){
+        zIndex() {
             if (this.activeRect === null) {
                 return null;
             }
@@ -119,7 +119,7 @@ export default {
 
         changeMinWidth(ev) {
             let minw = parseInt(ev.target.value);
-            if(typeof minw !== 'number' || isNaN(minw)){
+            if (typeof minw !== 'number' || isNaN(minw)) {
                 minw = 1;
             }
 
@@ -137,7 +137,7 @@ export default {
         changeMinHeight(ev) {
             let minh = parseInt(ev.target.value);
 
-            if(typeof minh !== 'number' || isNaN(minh)){
+            if (typeof minh !== 'number' || isNaN(minh)) {
                 minh = 1;
             }
 
@@ -150,6 +150,27 @@ export default {
             ev.target.value = minh;
 
             this.$store.dispatch('rect/setMinHeight', {id: this.activeRect, height: minh});
+        },
+
+        changeTop(ev) {
+            let top = parseInt(ev.target.value);
+
+            if (typeof top !== 'number' || isNaN(top)) {
+                top = this.$store.state.rect.rects[this.activeRect].top;
+                ev.target.value = top;
+                return
+            }
+        },
+
+        changeLeft(ev) {
+            let left = parseInt(ev.target.value);
+
+            if (typeof left !== 'number' || isNaN(left)) {
+                left = this.$store.state.rect.rects[this.activeRect].left;
+                ev.target.value = left;
+            }
+
+            this.$store.dispatch('rect/setLeft', {id: this.activeRect, left: left});
         }
     }
 }
