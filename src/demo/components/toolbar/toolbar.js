@@ -160,6 +160,8 @@ export default {
                 ev.target.value = top;
                 return
             }
+
+            this.$store.dispatch('rect/setTop', {id: this.activeRect, top: top});
         },
 
         changeLeft(ev) {
