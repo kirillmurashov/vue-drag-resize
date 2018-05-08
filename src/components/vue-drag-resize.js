@@ -616,6 +616,9 @@ export default {
         },
 
         x(){
+            if (this.stickDrag || this.bodyDrag) {
+                return
+            }
             this.calcDragLimitation();
             let delta = this.x - this.left;
             this.rawLeft = this.x;
@@ -623,6 +626,9 @@ export default {
         },
 
         y(){
+            if (this.stickDrag || this.bodyDrag) {
+                return
+            }
             this.calcDragLimitation();
             let delta = this.y - this.top;
             this.rawTop = this.y;
