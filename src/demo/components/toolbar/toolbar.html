@@ -26,7 +26,7 @@
     <div class="toolbar-wh-row">
         <p class="toolbar-row-title">Size</p>
         <span class="toolbar-size-inp">width
-            <input :value="width" disabled />
+            <input :value="width" @keyup="changeWidth" />
             <svgicon name="lock"
                      :color="aspectRatio ? '#42b983 #35495e' : '#AAA'"
                      width="17"
@@ -36,7 +36,7 @@
             ></svgicon>
         </span>
         <span class="toolbar-size-inp">height
-            <input :value="height" disabled />
+            <input :value="height" @keyup="changeHeight" />
         </span>
     </div>
 

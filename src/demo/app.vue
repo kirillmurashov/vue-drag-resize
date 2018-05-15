@@ -94,8 +94,11 @@
             },
 
             changePosition(newRect, index) {
+
                 this.$store.dispatch('rect/setTop', {id: index, top: newRect.top});
                 this.$store.dispatch('rect/setLeft', {id: index, left: newRect.left});
+                this.$store.dispatch('rect/setWidth', {id: index, width: newRect.width});
+                this.$store.dispatch('rect/setHeight', {id: index, height: newRect.height});
             },
 
             changeSize(newRect, index) {

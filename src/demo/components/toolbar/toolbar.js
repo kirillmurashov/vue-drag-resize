@@ -173,6 +173,28 @@ export default {
             }
 
             this.$store.dispatch('rect/setLeft', {id: this.activeRect, left: left});
+        },
+
+        changeWidth(ev){
+            let width = parseInt(ev.target.value);
+
+            if (typeof width !== 'number' || isNaN(width)) {
+                width = this.$store.state.rect.rects[this.activeRect].width;
+                ev.target.value = width;
+            }
+
+            this.$store.dispatch('rect/setWidth', {id: this.activeRect, width: width});
+        },
+
+        changeHeight(ev){
+            let height = parseInt(ev.target.value);
+
+            if (typeof height !== 'number' || isNaN(height)) {
+                height = this.$store.state.rect.rects[this.activeRect].height;
+                ev.target.value = height;
+            }
+
+            this.$store.dispatch('rect/setHeight', {id: this.activeRect, height: height});
         }
     }
 }

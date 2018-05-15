@@ -197,24 +197,24 @@ export default {
             this.stickStartPos.top = this.top;
             this.stickStartPos.bottom = this.bottom;
 
-            this.calcDragLimitation();
+            if (this.parentLimitation) {
+                this.limits = this.calcDragLimitation();
+            }
         },
 
         calcDragLimitation(){
             const parentWidth = this.parentWidth;
             const parentHeight = this.parentHeight;
 
-            if (this.parentLimitation) {
-                this.limits = {
-                    minLeft: 0,
-                    maxLeft: parentWidth - this.width,
-                    minRight: 0,
-                    maxRight: parentWidth - this.width,
-                    minTop: 0,
-                    maxTop: parentHeight - this.height,
-                    minBottom: 0,
-                    maxBottom: parentHeight - this.height
-                };
+            return {
+                minLeft: 0,
+                maxLeft: parentWidth - this.width,
+                minRight: 0,
+                maxRight: parentWidth - this.width,
+                minTop: 0,
+                maxTop: parentHeight - this.height,
+                minBottom: 0,
+                maxBottom: parentHeight - this.height
             }
         },
 
@@ -255,6 +255,7 @@ export default {
             if (!this.isResizable || !this.active) {
                 return
             }
+
             this.stickDrag = true;
             this.stickStartPos.mouseX = ev.x;
             this.stickStartPos.mouseY = ev.y;
@@ -284,71 +285,76 @@ export default {
 
 
             if (this.parentLimitation) {
-                let minw = this.minWidth;
-                let minh = this.minHeight;
-                const aspectFactor = this.aspectFactor;
-                const width = this.width;
-                const height = this.height;
-                const bottom = this.bottom;
-                const top = this.top;
-                const left = this.left;
-                const right = this.right;
-                const stickAxis = this.stickAxis;
-
-                if (this.aspectRatio) {
-                    if (minw / minh > aspectFactor) {
-                        minh = minw / aspectFactor;
-                    } else {
-                        minw = aspectFactor * minh;
-                    }
-                }
-
-                let limits = {
-                    minLeft: 0,
-                    maxLeft: left + (width - minw),
-                    minRight: 0,
-                    maxRight: right + (width - minw),
-                    minTop: 0,
-                    maxTop: top + (height - minh),
-                    minBottom: 0,
-                    maxBottom: bottom + (height - minh)
-                };
-
-                if (this.aspectRatio) {
-                    const aspectLimits = {
-                        minLeft: left - (Math.min(top, bottom) * aspectFactor) * 2,
-                        maxLeft: left + ((((height - minh) / 2) * aspectFactor) * 2),
-
-                        minRight: right - (Math.min(top, bottom) * aspectFactor) * 2,
-                        maxRight: right + ((((height - minh) / 2) * aspectFactor) * 2),
-
-                        minTop: top - (Math.min(left, right) / aspectFactor) * 2,
-                        maxTop: top + ((((width - minw) / 2) / aspectFactor) * 2),
-
-                        minBottom: bottom - (Math.min(left, right) / aspectFactor) * 2,
-                        maxBottom: bottom + ((((width - minw) / 2) / aspectFactor) * 2)
-                    };
-
-                    if (stickAxis === 'x') {
-                        limits = {
-                            minLeft: Math.max(limits.minLeft, aspectLimits.minLeft),
-                            maxLeft: Math.min(limits.maxLeft, aspectLimits.maxLeft),
-                            minRight: Math.max(limits.minRight, aspectLimits.minRight),
-                            maxRight: Math.min(limits.maxRight, aspectLimits.maxRight)
-                        }
-                    } else if (stickAxis === 'y') {
-                        limits = {
-                            minTop: Math.max(limits.minTop, aspectLimits.minTop),
-                            maxTop: Math.min(limits.maxTop, aspectLimits.maxTop),
-                            minBottom: Math.max(limits.minBottom, aspectLimits.minBottom),
-                            maxBottom: Math.min(limits.maxBottom, aspectLimits.maxBottom)
-                        }
-                    }
-                }
-
-                this.limits = limits;
+                this.limits = this.calcResizeLimitation();
             }
 
+        },
+
+        calcResizeLimitation(){
+            let minw = this.minWidth;
+            let minh = this.minHeight;
+            const aspectFactor = this.aspectFactor;
+            const width = this.width;
+            const height = this.height;
+            const bottom = this.bottom;
+            const top = this.top;
+            const left = this.left;
+            const right = this.right;
+            const stickAxis = this.stickAxis;
+
+            if (this.aspectRatio) {
+                if (minw / minh > aspectFactor) {
+                    minh = minw / aspectFactor;
+                } else {
+                    minw = aspectFactor * minh;
+                }
+            }
+
+            let limits = {
+                minLeft: 0,
+                maxLeft: left + (width - minw),
+                minRight: 0,
+                maxRight: right + (width - minw),
+                minTop: 0,
+                maxTop: top + (height - minh),
+                minBottom: 0,
+                maxBottom: bottom + (height - minh)
+            };
+
+            if (this.aspectRatio) {
+                const aspectLimits = {
+                    minLeft: left - (Math.min(top, bottom) * aspectFactor) * 2,
+                    maxLeft: left + ((((height - minh) / 2) * aspectFactor) * 2),
+
+                    minRight: right - (Math.min(top, bottom) * aspectFactor) * 2,
+                    maxRight: right + ((((height - minh) / 2) * aspectFactor) * 2),
+
+                    minTop: top - (Math.min(left, right) / aspectFactor) * 2,
+                    maxTop: top + ((((width - minw) / 2) / aspectFactor) * 2),
+
+                    minBottom: bottom - (Math.min(left, right) / aspectFactor) * 2,
+                    maxBottom: bottom + ((((width - minw) / 2) / aspectFactor) * 2)
+                };
+
+                if (stickAxis === 'x') {
+                    limits = {
+                        minLeft: Math.max(limits.minLeft, aspectLimits.minLeft),
+                        maxLeft: Math.min(limits.maxLeft, aspectLimits.maxLeft),
+                        minRight: Math.max(limits.minRight, aspectLimits.minRight),
+                        maxRight: Math.min(limits.maxRight, aspectLimits.maxRight)
+                    }
+                } else if (stickAxis === 'y') {
+                    limits = {
+                        minTop: Math.max(limits.minTop, aspectLimits.minTop),
+                        maxTop: Math.min(limits.maxTop, aspectLimits.maxTop),
+                        minBottom: Math.max(limits.minBottom, aspectLimits.minBottom),
+                        maxBottom: Math.min(limits.maxBottom, aspectLimits.maxBottom)
+                    }
+                }
+            }
+
+
+            return limits;
         },
 
         stickMove(ev) {
@@ -619,7 +625,10 @@ export default {
             if (this.stickDrag || this.bodyDrag) {
                 return
             }
-            this.calcDragLimitation();
+            if(this.parentLimitation){
+                this.limits = this.calcDragLimitation();
+            }
+
             let delta = this.x - this.left;
             this.rawLeft = this.x;
             this.rawRight = this.right - delta;
@@ -629,10 +638,46 @@ export default {
             if (this.stickDrag || this.bodyDrag) {
                 return
             }
-            this.calcDragLimitation();
+
+            if(this.parentLimitation){
+                this.limits = this.calcDragLimitation();
+            }
+
             let delta = this.y - this.top;
             this.rawTop = this.y;
             this.rawBottom = this.bottom - delta;
+        },
+
+        w(){
+            if (this.stickDrag || this.bodyDrag) {
+                return
+            }
+
+            this.currentStick = ['m', 'r'];
+            this.stickAxis = 'x';
+
+            if(this.parentLimitation){
+                this.limits = this.calcResizeLimitation();
+            }
+
+            let delta = this.width - this.w;
+            this.rawRight = this.right + delta;
+        },
+
+        h(){
+            if (this.stickDrag || this.bodyDrag) {
+                return
+            }
+
+            this.currentStick = ['b', 'm'];
+            this.stickAxis = 'y';
+
+            if(this.parentLimitation){
+                this.limits = this.calcResizeLimitation();
+            }
+
+            let delta = this.height- this.h;
+            this.rawBottom = this.bottom + delta;
         }
     }
 }
