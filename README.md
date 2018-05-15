@@ -97,6 +97,18 @@ Determines whether the component should be active.
 <vue-drag-resize :isActive="true">
 ```
 
+#### preventActiveBehavior
+Type: `Boolean`<br>
+Required: `false`<br>
+Default: `false`
+
+Disable behavior of the component by clicking on it and clicking outside the component's area (isActive: true / false).
+If the prop is enabled, the component is oriented only to the specified.
+
+```html
+<vue-drag-resize :isActive="true">
+```
+
 #### isDraggable
 Type: `Boolean`<br>
 Required: `false`<br>
@@ -253,6 +265,17 @@ Define the axis on which the element is draggable. Available values are `x`, `y`
 ---
 
 ### Events
+
+#### clicked
+
+Required: `false`<br>
+Parameters: `-`
+
+Called whenever the component gets clicked.
+
+```html
+<vue-drag-resize @activated="onActivated">
+```
 
 #### activated
 
