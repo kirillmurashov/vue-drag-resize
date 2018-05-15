@@ -4,6 +4,9 @@ export default {
         isActive: {
             type: Boolean, default: false
         },
+        preventActiveBehavior: {
+            type: Boolean, default: false
+        },
         isDraggable: {
             type: Boolean, default: true
         },
@@ -155,13 +158,19 @@ export default {
 
     methods: {
         deselect(ev) {
+            if(this.preventActiveBehavior){
+                return
+            }
             this.active = false
         },
 
         move(ev) {
+
             if (!this.stickDrag && !this.bodyDrag) {
                 return
             }
+
+            ev.stopPropagation();
 
             if (this.stickDrag) {
                 this.stickMove(ev);
@@ -172,6 +181,8 @@ export default {
         },
 
         up(ev) {
+            ev.stopPropagation();
+
             if (this.stickDrag) {
                 this.stickUp(ev);
             }
@@ -181,7 +192,10 @@ export default {
         },
 
         bodyDown: function (ev) {
-            this.active = true;
+            if(!this.preventActiveBehavior){
+                this.active = true;
+            }
+            this.$emit('clicked');
 
             if (!this.isDraggable || !this.active) {
                 return
