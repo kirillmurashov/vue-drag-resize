@@ -113,6 +113,30 @@ If the prop is enabled, the component is oriented only to the specified.
 <vue-drag-resize :isActive="true">
 ```
 
+#### parentW
+Type: `Number`<br>
+Required: `false`<br>
+Default: `0`
+
+Define the initial width of the parent element. If not specified it calculated automatically.
+With this parameter, you can set the bounding area for the component, and also it is used when resizing in real time.
+
+```html
+<vue-drag-resize :w="200">
+```
+
+#### parentH
+Type: `Number`<br>
+Required: `false`<br>
+Default: `0`
+
+Define the initial height of the parent element. If not specified it calculated automatically.
+With this parameter, you can set the bounding area for the component, and also it is used when resizing in real time.
+
+```html
+<vue-drag-resize :w="200">
+```
+
 #### isDraggable
 Type: `Boolean`<br>
 Required: `false`<br>

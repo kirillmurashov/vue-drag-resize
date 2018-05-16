@@ -19,6 +19,20 @@ export default {
         parentLimitation: {
             type: Boolean, default: true
         },
+        parentW: {
+            type: Number,
+            default: 0,
+            validator: function (val) {
+                return val >= 0
+            }
+        },
+        parentH: {
+            type: Number,
+            default: 0,
+            validator: function (val) {
+                return val >= 0
+            }
+        },
         w: {
             type: Number,
             default: 100,
@@ -127,9 +141,9 @@ export default {
 
     mounted: function () {
         this.parentElement = this.$el.parentNode;
+        this.parentWidth = this.parentW ? this.parentW : this.parentElement.clientWidth;
+        this.parentHeight = this.parentH ? this.parentH : this.parentElement.clientHeight;
 
-        this.parentWidth = this.parentElement.clientWidth;
-        this.parentHeight = this.parentElement.clientHeight;
         this.rawRight = this.parentWidth - this.rawWidth - this.rawLeft;
         this.rawBottom = this.parentHeight - this.rawHeight - this.rawTop;
 
@@ -692,6 +706,18 @@ export default {
 
             let delta = this.height- this.h;
             this.rawBottom = this.bottom + delta;
+        },
+
+        parentW(val){
+            this.right = val - this.width - this.left;
+            this.parentWidth = val;
+
+        },
+
+        parentH(val){
+            this.bottom = val - this.height - this.top;
+            this.parentHeight = val;
+
         }
     }
 }

@@ -1,11 +1,13 @@
 <template>
     <div id="app">
-        <div class="list">
+        <div class="list" id="list">
             <VueDragResize v-for="(rect, index) in rects"
                            :w="rect.width"
                            :h="rect.height"
                            :x="rect.left"
                            :y="rect.top"
+                           :parentW="listWidth"
+                           :parentH="listHeight"
                            :axis="rect.axis"
                            :isActive="rect.active"
                            :minw="rect.minw"
@@ -75,7 +77,22 @@
             toolbar
         },
 
+        data(){
+            return {
+                listWidth: 0,
+                listHeight: 0
+            }
+        },
+
         mounted() {
+            let listEl = document.getElementById('list');
+            this.listWidth = listEl.clientWidth;
+            this.listHeight = listEl.clientHeight;
+
+            window.addEventListener('resize', ()=>{
+                this.listWidth = listEl.clientWidth;
+                this.listHeight = listEl.clientHeight;
+            })
         },
 
         computed: {
