@@ -122,7 +122,7 @@ Define the initial width of the parent element. If not specified it calculated a
 With this parameter, you can set the bounding area for the component, and also it is used when resizing in real time.
 
 ```html
-<vue-drag-resize :w="200">
+<vue-drag-resize :parentW="2000">
 ```
 
 #### parentH
@@ -134,7 +134,7 @@ Define the initial height of the parent element. If not specified it calculated 
 With this parameter, you can set the bounding area for the component, and also it is used when resizing in real time.
 
 ```html
-<vue-drag-resize :w="200">
+<vue-drag-resize :parentH="2000">
 ```
 
 #### isDraggable
