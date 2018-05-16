@@ -1,3 +1,4 @@
+<p align="center"><img src="http://kirillmurashov.com/vue-drag-resize/1.gif" alt="logo"></p>
 <h1 align="center">Vue-drag-resize</h1>
 
 [![Latest Version on NPM](https://img.shields.io/npm/v/vue-drag-resize.svg?style=flat-square)](https://npmjs.com/package/vue-drag-resize)
