@@ -1,5 +1,7 @@
 <h1 align="center">Vue-drag-resize</h1>
-
+[![Latest Version on NPM](https://img.shields.io/npm/v/vue-draggable-resizable.svg?style=flat-square)](https://npmjs.com/package/vue-drag-resize)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
+[![npm](https://img.shields.io/npm/dt/vue-drag-resize.svg?style=flat-square)](https://www.npmjs.com/package/vue-drag-resize)
 > Vue Component for draggable and resizable elements.
 
 ## Table of Contents
