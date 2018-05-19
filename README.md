@@ -23,6 +23,8 @@
 ### Features
 
 * A lightweight, no-dependency 
+* All props are reactive
+* Support touch events
 * Use draggable, resizable or both
 * Define sticks for resizing
 * Save aspect ratio for resizable components
