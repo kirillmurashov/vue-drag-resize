@@ -111,7 +111,7 @@ Disable behavior of the component by clicking on it and clicking outside the com
 If the prop is enabled, the component is oriented only to the specified.
 
 ```html
-<vue-drag-resize :isActive="true">
+<vue-drag-resize :preventActiveBehavior="true">
 ```
 
 #### parentW
