@@ -179,7 +179,6 @@ export default {
         },
 
         move(ev) {
-
             if (!this.stickDrag && !this.bodyDrag) {
                 return
             }
@@ -195,8 +194,6 @@ export default {
         },
 
         up(ev) {
-            ev.stopPropagation();
-
             if (this.stickDrag) {
                 this.stickUp(ev);
             }
