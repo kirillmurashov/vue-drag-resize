@@ -17,7 +17,7 @@ export default {
             type: Boolean, default: false
         },
         parentLimitation: {
-            type: Boolean, default: true
+            type: Boolean, default: false
         },
         parentW: {
             type: Number,
