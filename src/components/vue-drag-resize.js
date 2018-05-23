@@ -237,11 +237,11 @@ export default {
                 return
             }
 
-            if(this.dragHandle && target.getAttribute('data-drag-handle') !== this._uid.toString()){
+            if (this.dragHandle && target.getAttribute('data-drag-handle') !== this._uid.toString()) {
                 return
             }
 
-            if(this.dragCancel && target.getAttribute('data-drag-cancel') === this._uid.toString()){
+            if (this.dragCancel && target.getAttribute('data-drag-cancel') === this._uid.toString()) {
                 return
             }
 
@@ -342,10 +342,7 @@ export default {
             }
 
 
-            if (this.parentLimitation) {
-                this.limits = this.calcResizeLimitation();
-            }
-
+            this.limits = this.calcResizeLimitation();
         },
 
         calcResizeLimitation() {
@@ -360,6 +357,8 @@ export default {
             const right = this.right;
             const stickAxis = this.stickAxis;
 
+            const parentLim = this.parentLimitation ? 0 : null;
+
             if (this.aspectRatio) {
                 if (minw / minh > aspectFactor) {
                     minh = minw / aspectFactor;
@@ -369,13 +368,13 @@ export default {
             }
 
             let limits = {
-                minLeft: 0,
+                minLeft: parentLim,
                 maxLeft: left + (width - minw),
-                minRight: 0,
+                minRight: parentLim,
                 maxRight: right + (width - minw),
-                minTop: 0,
+                minTop: parentLim,
                 maxTop: top + (height - minh),
-                minBottom: 0,
+                minBottom: parentLim,
                 maxBottom: bottom + (height - minh)
             };
 
