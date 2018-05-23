@@ -290,6 +290,27 @@ Define the axis on which the element is draggable. Available values are `x`, `y`
 <vue-drag-resize axis="x">
 ```
 
+#### dragHandle
+Type: `String`<br>
+Required: `false`
+
+Defines the selector that should be used to drag the component.
+
+```html
+<vue-drag-resize dragHandle=".drag">
+```
+
+#### dragCancel
+Type: `String`<br>
+Required: `false`
+
+Defines a selector that should be used to prevent drag initialization.
+
+```html
+<vue-drag-resize dragCancel=".drag">
+```
+
+
 
 
 

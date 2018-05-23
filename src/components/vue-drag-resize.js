@@ -83,6 +83,14 @@ export default {
                 return valid
             }
         },
+        dragHandle: {
+            type: String,
+            default: null
+        },
+        dragCancel: {
+            type: String,
+            default: null
+        },
         sticks: {
             type: Array,
             default: function () {
@@ -156,6 +164,20 @@ export default {
         document.documentElement.addEventListener('touchmove', this.move, true);
         document.documentElement.addEventListener('touchend touchcancel', this.up, true);
         document.documentElement.addEventListener('touchstart', this.up, true);
+
+        if (this.dragHandle) {
+            let dragHandles = Array.prototype.slice.call(this.$el.querySelectorAll(this.dragHandle));
+            for (let i in dragHandles) {
+                dragHandles[i].setAttribute('data-drag-handle', this._uid);
+            }
+        }
+
+        if (this.dragCancel) {
+            let cancelHandles = Array.prototype.slice.call(this.$el.querySelectorAll(this.dragCancel));
+            for (let i in cancelHandles) {
+                cancelHandles[i].setAttribute('data-drag-cancel', this._uid);
+            }
+        }
     },
 
     beforeDestroy: function () {
@@ -172,7 +194,7 @@ export default {
 
     methods: {
         deselect(ev) {
-            if(this.preventActiveBehavior){
+            if (this.preventActiveBehavior) {
                 return
             }
             this.active = false
@@ -203,12 +225,23 @@ export default {
         },
 
         bodyDown: function (ev) {
-            if(!this.preventActiveBehavior){
+            let target = ev.target || ev.srcElement;
+
+            if (!this.preventActiveBehavior) {
                 this.active = true;
             }
+
             this.$emit('clicked');
 
             if (!this.isDraggable || !this.active) {
+                return
+            }
+
+            if(this.dragHandle && target.getAttribute('data-drag-handle') !== this._uid.toString()){
+                return
+            }
+
+            if(this.dragCancel && target.getAttribute('data-drag-cancel') === this._uid.toString()){
                 return
             }
 
@@ -227,7 +260,7 @@ export default {
             }
         },
 
-        calcDragLimitation(){
+        calcDragLimitation() {
             const parentWidth = this.parentWidth;
             const parentHeight = this.parentHeight;
 
@@ -315,7 +348,7 @@ export default {
 
         },
 
-        calcResizeLimitation(){
+        calcResizeLimitation() {
             let minw = this.minWidth;
             let minh = this.minHeight;
             const aspectFactor = this.aspectFactor;
@@ -495,7 +528,7 @@ export default {
             return this.parentHeight - this.top - this.bottom;
         },
 
-        rect(){
+        rect() {
             return {
                 left: Math.round(this.left),
                 top: Math.round(this.top),
@@ -646,11 +679,11 @@ export default {
             }
         },
 
-        x(){
+        x() {
             if (this.stickDrag || this.bodyDrag) {
                 return
             }
-            if(this.parentLimitation){
+            if (this.parentLimitation) {
                 this.limits = this.calcDragLimitation();
             }
 
@@ -659,12 +692,12 @@ export default {
             this.rawRight = this.right - delta;
         },
 
-        y(){
+        y() {
             if (this.stickDrag || this.bodyDrag) {
                 return
             }
 
-            if(this.parentLimitation){
+            if (this.parentLimitation) {
                 this.limits = this.calcDragLimitation();
             }
 
@@ -673,7 +706,7 @@ export default {
             this.rawBottom = this.bottom - delta;
         },
 
-        w(){
+        w() {
             if (this.stickDrag || this.bodyDrag) {
                 return
             }
@@ -681,7 +714,7 @@ export default {
             this.currentStick = ['m', 'r'];
             this.stickAxis = 'x';
 
-            if(this.parentLimitation){
+            if (this.parentLimitation) {
                 this.limits = this.calcResizeLimitation();
             }
 
@@ -689,7 +722,7 @@ export default {
             this.rawRight = this.right + delta;
         },
 
-        h(){
+        h() {
             if (this.stickDrag || this.bodyDrag) {
                 return
             }
@@ -697,21 +730,21 @@ export default {
             this.currentStick = ['b', 'm'];
             this.stickAxis = 'y';
 
-            if(this.parentLimitation){
+            if (this.parentLimitation) {
                 this.limits = this.calcResizeLimitation();
             }
 
-            let delta = this.height- this.h;
+            let delta = this.height - this.h;
             this.rawBottom = this.bottom + delta;
         },
 
-        parentW(val){
+        parentW(val) {
             this.right = val - this.width - this.left;
             this.parentWidth = val;
 
         },
 
-        parentH(val){
+        parentH(val) {
             this.bottom = val - this.height - this.top;
             this.parentHeight = val;
 
