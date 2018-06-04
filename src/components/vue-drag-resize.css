@@ -1,7 +1,3 @@
-:root{
-    --stick-size: 8px;
-}
-
 .vdr {
     position: absolute;
     box-sizing: border-box;
@@ -18,8 +14,6 @@
 .vdr-stick {
     box-sizing: border-box;
     position: absolute;
-    width: var(--stick-size);
-    height: var(--stick-size);
     font-size: 1px;
     background: #ffffff;
     border: 1px solid #6c6c6c;
@@ -28,49 +22,19 @@
 .inactive .vdr-stick {
     display: none;
 }
-.vdr-stick-tl {
-    top: calc(var(--stick-size)/-2);
-    left: calc(var(--stick-size)/-2);
+.vdr-stick-tl, .vdr-stick-br {
     cursor: nwse-resize;
 }
-.vdr-stick-tm {
-    top: calc(var(--stick-size)/-2);
+.vdr-stick-tm, .vdr-stick-bm {
     left: 50%;
-    margin-left: calc(var(--stick-size)/-2);
     cursor: ns-resize;
 }
-.vdr-stick-tr {
-    top: calc(var(--stick-size)/-2);
-    right: calc(var(--stick-size)/-2);
+.vdr-stick-tr, .vdr-stick-bl {
     cursor: nesw-resize;
 }
-.vdr-stick-ml {
+.vdr-stick-ml, .vdr-stick-mr {
     top: 50%;
-    margin-top: calc(var(--stick-size)/-2);
-    left: calc(var(--stick-size)/-2);
     cursor: ew-resize;
-}
-.vdr-stick-mr {
-    top: 50%;
-    margin-top: calc(var(--stick-size)/-2);
-    right: calc(var(--stick-size)/-2);
-    cursor: ew-resize;
-}
-.vdr-stick-bl {
-    bottom: calc(var(--stick-size)/-2);
-    left: calc(var(--stick-size)/-2);
-    cursor: nesw-resize;
-}
-.vdr-stick-bm {
-    bottom: calc(var(--stick-size)/-2);
-    left: 50%;
-    margin-left: calc(var(--stick-size)/-2);
-    cursor: ns-resize;
-}
-.vdr-stick-br {
-    bottom: calc(var(--stick-size)/-2);
-    right: calc(var(--stick-size)/-2);
-    cursor: nwse-resize;
 }
 .vdr-stick.not-resizable{
     display: none;
