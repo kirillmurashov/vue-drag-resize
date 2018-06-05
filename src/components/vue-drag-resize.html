@@ -1,5 +1,5 @@
 <div class="vdr" :style="style"
-     :class="active ? 'active' : 'inactive'"
+     :class="active || isActive ? 'active' : 'inactive'"
      @mousedown.stop.prevent="bodyDown($event)"
      @touchstart.stop.prevent="bodyDown($event)">
     <slot></slot>
