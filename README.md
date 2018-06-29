@@ -140,6 +140,30 @@ With this parameter, you can set the bounding area for the component, and also i
 <vue-drag-resize :parentH="2000">
 ```
 
+#### parentScaleX
+Type: `Number`<br>
+Required: `false`<br>
+Default: `1`
+
+Define the initial horizontal scale or the parent element. Same value in parent's transform: scale() css definition.
+The drag/resize and the sticks' sizes will computed with this value.
+
+```html
+<vue-drag-resize :parentScaleX="0.5">
+```
+
+#### parentScaleY
+Type: `Number`<br>
+Required: `false`<br>
+Default: `1`
+
+Define the initial vertical scale or the parent element. Same value in parent's transform: scale() css definition.
+The drag/resize and the sticks' sizes will computed with this value.
+
+```html
+<vue-drag-resize :parentScaleY="0.5">
+```
+
 #### isDraggable
 Type: `Boolean`<br>
 Required: `false`<br>

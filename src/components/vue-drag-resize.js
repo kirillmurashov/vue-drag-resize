@@ -1,6 +1,26 @@
+const stickSize = 8;
+const styleMapping = {
+  y: {
+    t: 'top',
+    m: 'marginTop',
+    b: 'bottom',
+  },
+  x: {
+    l: 'left',
+    m: 'marginLeft',
+    r: 'right',
+  }
+};
+
 export default {
     name: 'vue-drag-resize',
     props: {
+        parentScaleX: {
+          type: Number, default: 1,
+        },
+        parentScaleY: {
+          type: Number, default: 1,
+        },
         isActive: {
             type: Boolean, default: false
         },
@@ -284,8 +304,8 @@ export default {
             const stickStartPos = this.stickStartPos;
 
             let delta = {
-                x: this.axis !== 'y' && this.axis !== 'none' ? stickStartPos.mouseX - (ev.pageX || ev.touches[0].pageX) : 0,
-                y: this.axis !== 'x' && this.axis !== 'none' ? stickStartPos.mouseY - (ev.pageY || ev.touches[0].pageY) : 0
+                x: (this.axis !== 'y' && this.axis !== 'none' ? stickStartPos.mouseX - (ev.pageX || ev.touches[0].pageX) : 0) / this.parentScaleX,
+                y: (this.axis !== 'x' && this.axis !== 'none' ? stickStartPos.mouseY - (ev.pageY || ev.touches[0].pageY) : 0) / this.parentScaleY
             };
 
             this.rawTop = stickStartPos.top - delta.y;
@@ -422,8 +442,8 @@ export default {
             const stickStartPos = this.stickStartPos;
 
             const delta = {
-                x: stickStartPos.mouseX - (ev.pageX || ev.touches[0].pageX),
-                y: stickStartPos.mouseY - (ev.pageY || ev.touches[0].pageY)
+                x: (stickStartPos.mouseX - (ev.pageX || ev.touches[0].pageX)) / this.parentScaleX,
+                y: (stickStartPos.mouseY - (ev.pageY || ev.touches[0].pageY)) / this.parentScaleY
             };
 
             switch (this.currentStick[0]) {
@@ -520,6 +540,18 @@ export default {
                 width: this.width + 'px',
                 height: this.height + 'px',
                 zIndex: this.zIndex
+            }
+        },
+
+        vdrStick() {
+            return (stick) => {
+                const stickStyle = {
+                    width: `${stickSize / this.parentScaleX}px`,
+                    height: `${stickSize / this.parentScaleY}px`,
+                };
+                stickStyle[styleMapping.y[stick[0]]] = `${stickSize / this.parentScaleX / -2}px`;
+                stickStyle[styleMapping.x[stick[1]]] = `${stickSize / this.parentScaleX / -2}px`;
+                return stickStyle;
             }
         },
 
