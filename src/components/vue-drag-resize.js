@@ -251,7 +251,7 @@ export default {
                 this.active = true;
             }
 
-            if (ev.button !== 0) {
+            if (ev.button && ev.button !== 0) {
                 return
             }
 
