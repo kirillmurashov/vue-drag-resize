@@ -345,12 +345,12 @@ Defines a selector that should be used to prevent drag initialization.
 #### clicked
 
 Required: `false`<br>
-Parameters: `-`
+Parameters: `Original event handler`
 
 Called whenever the component gets clicked.
 
 ```html
-<vue-drag-resize @activated="onActivated">
+<vue-drag-resize @clicked="onActivated">
 ```
 
 #### activated

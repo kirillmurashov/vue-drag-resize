@@ -213,7 +213,7 @@ export default {
     },
 
     methods: {
-        deselect(ev) {
+        deselect() {
             if (this.preventActiveBehavior) {
                 return
             }
@@ -251,7 +251,11 @@ export default {
                 this.active = true;
             }
 
-            this.$emit('clicked');
+            if (ev.button !== 0) {
+                return
+            }
+
+            this.$emit('clicked', ev);
 
             if (!this.isDraggable || !this.active) {
                 return
@@ -267,8 +271,8 @@ export default {
 
             this.bodyDrag = true;
 
-            this.stickStartPos.mouseX = ev.x;
-            this.stickStartPos.mouseY = ev.y;
+            this.stickStartPos.mouseX = ev.pageX || ev.touches[0].pageX;
+            this.stickStartPos.mouseY = ev.pageY || ev.touches[0].pageY;
 
             this.stickStartPos.left = this.left;
             this.stickStartPos.right = this.right;
@@ -300,8 +304,8 @@ export default {
             const stickStartPos = this.stickStartPos;
 
             let delta = {
-                x: (this.axis !== 'y' && this.axis !== 'none' ? stickStartPos.mouseX - ev.x : 0) / this.parentScaleX,
-                y: (this.axis !== 'x' && this.axis !== 'none' ? stickStartPos.mouseY - ev.y : 0) / this.parentScaleY
+                x: (this.axis !== 'y' && this.axis !== 'none' ? stickStartPos.mouseX - (ev.pageX || ev.touches[0].pageX) : 0) / this.parentScaleX,
+                y: (this.axis !== 'x' && this.axis !== 'none' ? stickStartPos.mouseY - (ev.pageY || ev.touches[0].pageY) : 0) / this.parentScaleY
             };
 
             this.rawTop = stickStartPos.top - delta.y;
@@ -335,8 +339,8 @@ export default {
             }
 
             this.stickDrag = true;
-            this.stickStartPos.mouseX = ev.x;
-            this.stickStartPos.mouseY = ev.y;
+            this.stickStartPos.mouseX = ev.pageX || ev.touches[0].pageX;
+            this.stickStartPos.mouseY = ev.pageY || ev.touches[0].pageY;
             this.stickStartPos.left = this.left;
             this.stickStartPos.right = this.right;
             this.stickStartPos.top = this.top;
@@ -438,8 +442,8 @@ export default {
             const stickStartPos = this.stickStartPos;
 
             const delta = {
-                x: (stickStartPos.mouseX - ev.x) / this.parentScaleX,
-                y: (stickStartPos.mouseY - ev.y) / this.parentScaleY
+                x: (stickStartPos.mouseX - (ev.pageX || ev.touches[0].pageX)) / this.parentScaleX,
+                y: (stickStartPos.mouseY - (ev.pageY || ev.touches[0].pageY)) / this.parentScaleY
             };
 
             switch (this.currentStick[0]) {
