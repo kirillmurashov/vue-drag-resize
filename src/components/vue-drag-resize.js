@@ -231,6 +231,10 @@ export default {
                 this.active = true;
             }
 
+            if (ev.button !== 0) {
+                return
+            }
+
             this.$emit('clicked', ev);
 
             if (!this.isDraggable || !this.active) {
