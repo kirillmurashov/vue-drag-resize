@@ -231,7 +231,7 @@ export default {
                 this.active = true;
             }
 
-            this.$emit('clicked');
+            this.$emit('clicked', ev);
 
             if (!this.isDraggable || !this.active) {
                 return
