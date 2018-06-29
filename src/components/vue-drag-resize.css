@@ -12,6 +12,7 @@
     height: 100%;
     position: absolute;
     top: 0;
+    left: 0;
     box-sizing: border-box;
     outline: 1px dashed #d6d6d6;
 }
