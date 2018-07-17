@@ -268,6 +268,9 @@ export default {
             if (this.dragCancel && target.getAttribute('data-drag-cancel') === this._uid.toString()) {
                 return
             }
+          
+            ev.stopPropagation();
+            ev.preventDefault();
 
             this.bodyDrag = true;
 
