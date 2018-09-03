@@ -291,8 +291,8 @@ export default {
 
             this.bodyDrag = true;
 
-            this.stickStartPos.mouseX = ev.pageX || ev.touches[0].pageX;
-            this.stickStartPos.mouseY = ev.pageY || ev.touches[0].pageY;
+            this.stickStartPos.mouseX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
+            this.stickStartPos.mouseY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
 
             this.stickStartPos.left = this.left;
             this.stickStartPos.right = this.right;
@@ -321,6 +321,8 @@ export default {
         },
 
         bodyMove(ev) {
+            const pageX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
+            const pageY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
             const stickStartPos = this.stickStartPos;
             const parentWidth = this.parentWidth;
             const parentHeight = this.parentHeight;
@@ -330,8 +332,8 @@ export default {
             const height = this.height;
 
             let delta = {
-                x: (this.axis !== 'y' && this.axis !== 'none' ? stickStartPos.mouseX - (ev.pageX || ev.touches[0].pageX) : 0) / this.parentScaleX,
-                y: (this.axis !== 'x' && this.axis !== 'none' ? stickStartPos.mouseY - (ev.pageY || ev.touches[0].pageY) : 0) / this.parentScaleY
+                x: (this.axis !== 'y' && this.axis !== 'none' ? stickStartPos.mouseX - pageX : 0) / this.parentScaleX,
+                y: (this.axis !== 'x' && this.axis !== 'none' ? stickStartPos.mouseY - pageY : 0) / this.parentScaleY
             };
 
             let newTop = stickStartPos.top - delta.y;
@@ -393,8 +395,8 @@ export default {
             }
 
             this.stickDrag = true;
-            this.stickStartPos.mouseX = ev.pageX || ev.touches[0].pageX;
-            this.stickStartPos.mouseY = ev.pageY || ev.touches[0].pageY;
+            this.stickStartPos.mouseX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
+            this.stickStartPos.mouseY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
             this.stickStartPos.left = this.left;
             this.stickStartPos.right = this.right;
             this.stickStartPos.top = this.top;
@@ -494,10 +496,12 @@ export default {
 
         stickMove(ev) {
             const stickStartPos = this.stickStartPos;
+            const pageX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
+            const pageY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
 
             const delta = {
-                x: (stickStartPos.mouseX - (ev.pageX || ev.touches[0].pageX)) / this.parentScaleX,
-                y: (stickStartPos.mouseY - (ev.pageY || ev.touches[0].pageY)) / this.parentScaleY
+                x: (stickStartPos.mouseX - pageX) / this.parentScaleX,
+                y: (stickStartPos.mouseY - pageY) / this.parentScaleY
             };
 
             let newTop = stickStartPos.top - delta.y;
