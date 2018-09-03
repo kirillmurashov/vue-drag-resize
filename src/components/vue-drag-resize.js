@@ -322,6 +322,12 @@ export default {
 
         bodyMove(ev) {
             const stickStartPos = this.stickStartPos;
+            const parentWidth = this.parentWidth;
+            const parentHeight = this.parentHeight;
+            const gridX = this.gridX;
+            const gridY = this.gridY;
+            const width = this.width;
+            const height = this.height;
 
             let delta = {
                 x: (this.axis !== 'y' && this.axis !== 'none' ? stickStartPos.mouseX - (ev.pageX || ev.touches[0].pageX) : 0) / this.parentScaleX,
@@ -334,10 +340,26 @@ export default {
             let newRight = stickStartPos.right + delta.x;
 
             if (this.snapToGrid) {
-                newTop = Math.round(newTop / this.gridY) * this.gridY;
-                newBottom = this.parentHeight - this.height - newTop;
-                newLeft = Math.round(newLeft / this.gridX) * this.gridX;
-                newRight = this.parentWidth - this.width - newLeft;
+                let alignTop = true;
+                let alignLeft = true;
+
+                let diffT = newTop - Math.floor(newTop / gridY) * gridY;
+                let diffB = (parentHeight - newBottom) - Math.floor((parentHeight - newBottom) / gridY) * gridY;
+                let diffL = newLeft - Math.floor(newLeft / gridX) * gridX;
+                let diffR = (parentWidth - newRight) - Math.floor((parentWidth - newRight) / gridX) * gridX;
+
+                if (diffT > (gridY / 2)) { diffT = diffT - gridY; }
+                if (diffB > (gridY / 2)) { diffB = diffB - gridY; }
+                if (diffL > (gridX / 2)) { diffL = diffL - gridX; }
+                if (diffR > (gridX / 2)) { diffR = diffR - gridX; }
+
+                if (Math.abs(diffB) < Math.abs(diffT)) { alignTop = false; }
+                if (Math.abs(diffR) < Math.abs(diffL)) { alignLeft = false; }
+
+                newTop = newTop - (alignTop ? diffT : diffB);
+                newBottom = parentHeight - height - newTop;
+                newLeft = newLeft - (alignLeft ? diffL : diffR);
+                newRight = parentWidth - width - newLeft;
             }
 
             this.rawTop = newTop;
