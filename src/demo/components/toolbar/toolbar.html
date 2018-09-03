@@ -54,6 +54,7 @@
         <p class="toolbar-row-title">Restrictions</p>
         <label class="toolbar-check-inp"><input type="checkbox" @change="toggleResizable" :checked="resizable" :disabled="activeRect === null" /> isResizable</label>
         <label class="toolbar-check-inp"><input type="checkbox" @change="toggleDraggable" :checked="draggable" :disabled="activeRect === null" /> isDraggable</label>
+        <label class="toolbar-check-inp"><input type="checkbox" @change="toggleSnapToGrid" :checked="snapToGrid" :disabled="activeRect === null" /> snapToGrid</label>
         <label class="toolbar-check-inp"><input type="checkbox" @change="toggleParentLimitation" :checked="parentLim" :disabled="activeRect === null" /> parentLimitation</label>
 
         <svgicon name="toBottom" :color="activeRect!==null && zIndex !== 'isFirst' ? '#35495e' : '#AAA'" width="30" height="30" class="to-bottom-icon" @click.native="toBottom"></svgicon>

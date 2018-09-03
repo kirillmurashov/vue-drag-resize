@@ -1,25 +1,25 @@
 const stickSize = 8;
 const styleMapping = {
-  y: {
-    t: 'top',
-    m: 'marginTop',
-    b: 'bottom',
-  },
-  x: {
-    l: 'left',
-    m: 'marginLeft',
-    r: 'right',
-  }
+    y: {
+        t: 'top',
+        m: 'marginTop',
+        b: 'bottom',
+    },
+    x: {
+        l: 'left',
+        m: 'marginLeft',
+        r: 'right',
+    }
 };
 
 export default {
     name: 'vue-drag-resize',
     props: {
         parentScaleX: {
-          type: Number, default: 1,
+            type: Number, default: 1,
         },
         parentScaleY: {
-          type: Number, default: 1,
+            type: Number, default: 1,
         },
         isActive: {
             type: Boolean, default: false
@@ -38,6 +38,23 @@ export default {
         },
         parentLimitation: {
             type: Boolean, default: false
+        },
+        snapToGrid: {
+            type: Boolean, default: false
+        },
+        gridX: {
+            type: Number,
+            default: 50,
+            validator: function (val) {
+                return val > 0
+            }
+        },
+        gridY: {
+            type: Number,
+            default: 50,
+            validator: function (val) {
+                return val > 0
+            }
         },
         parentW: {
             type: Number,
@@ -268,7 +285,7 @@ export default {
             if (this.dragCancel && target.getAttribute('data-drag-cancel') === this._uid.toString()) {
                 return
             }
-          
+
             ev.stopPropagation();
             ev.preventDefault();
 
@@ -311,10 +328,22 @@ export default {
                 y: (this.axis !== 'x' && this.axis !== 'none' ? stickStartPos.mouseY - (ev.pageY || ev.touches[0].pageY) : 0) / this.parentScaleY
             };
 
-            this.rawTop = stickStartPos.top - delta.y;
-            this.rawBottom = stickStartPos.bottom + delta.y;
-            this.rawLeft = stickStartPos.left - delta.x;
-            this.rawRight = stickStartPos.right + delta.x;
+            let newTop = stickStartPos.top - delta.y;
+            let newBottom = stickStartPos.bottom + delta.y;
+            let newLeft = stickStartPos.left - delta.x;
+            let newRight = stickStartPos.right + delta.x;
+
+            if (this.snapToGrid) {
+                newTop = Math.round(newTop / this.gridY) * this.gridY;
+                newBottom = this.parentHeight - this.height - newTop;
+                newLeft = Math.round(newLeft / this.gridX) * this.gridX;
+                newRight = this.parentWidth - this.width - newLeft;
+            }
+
+            this.rawTop = newTop;
+            this.rawBottom = newBottom;
+            this.rawLeft = newLeft;
+            this.rawRight = newRight;
             this.$emit('dragging', this.rect);
         },
 
@@ -323,7 +352,7 @@ export default {
             this.$emit('dragging', this.rect);
             this.$emit('dragstop', this.rect);
 
-            this.stickStartPos = {mouseX: 0, mouseY: 0, x: 0, y: 0, w: 0, h: 0};
+            this.stickStartPos = { mouseX: 0, mouseY: 0, x: 0, y: 0, w: 0, h: 0 };
             this.limits = {
                 minLeft: null,
                 maxLeft: null,
@@ -449,21 +478,48 @@ export default {
                 y: (stickStartPos.mouseY - (ev.pageY || ev.touches[0].pageY)) / this.parentScaleY
             };
 
+            let newTop = stickStartPos.top - delta.y;
+            let newBottom = stickStartPos.bottom + delta.y;
+            let newLeft = stickStartPos.left - delta.x;
+            let newRight = stickStartPos.right + delta.x;
+
             switch (this.currentStick[0]) {
                 case 'b':
-                    this.rawBottom = stickStartPos.bottom + delta.y;
+
+                    if (this.snapToGrid) {
+                        newBottom = this.parentHeight - Math.round((this.parentHeight - newBottom) / this.gridY) * this.gridY;
+                    }
+
+                    this.rawBottom = newBottom;
                     break;
+
                 case 't':
-                    this.rawTop = stickStartPos.top - delta.y;
+
+                    if (this.snapToGrid) {
+                        newTop = Math.round(newTop / this.gridY) * this.gridY;
+                    }
+
+                    this.rawTop = newTop;
                     break;
             }
 
             switch (this.currentStick[1]) {
                 case 'r':
-                    this.rawRight = stickStartPos.right + delta.x;
+
+                    if (this.snapToGrid) {
+                        newRight = this.parentWidth - Math.round((this.parentWidth - newRight) / this.gridX) * this.gridX;
+                    }
+
+                    this.rawRight = newRight;
                     break;
+
                 case 'l':
-                    this.rawLeft = stickStartPos.left - delta.x;
+
+                    if (this.snapToGrid) {
+                        newLeft = Math.round(newLeft / this.gridX) * this.gridX;
+                    }
+
+                    this.rawLeft = newLeft;
                     break;
             }
 
