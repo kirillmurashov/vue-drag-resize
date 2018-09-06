@@ -39,6 +39,14 @@ export default {
         }
     },
 
+    toggleSnapToGrid({commit, state}, {id}) {
+        if (!state.rects[id].snapToGrid) {
+            commit(types.ENABLE_SNAP_TO_GRID, id);
+        } else {
+            commit(types.DISABLE_SNAP_TO_GRID, id);
+        }
+    },
+
     setAspect({commit}, {id}) {
         commit(types.ENABLE_ASPECT, id);
     },
