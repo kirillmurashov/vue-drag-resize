@@ -321,8 +321,6 @@ export default {
         },
 
         bodyMove(ev) {
-            const pageX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
-            const pageY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
             const stickStartPos = this.stickStartPos;
             const parentWidth = this.parentWidth;
             const parentHeight = this.parentHeight;
@@ -330,6 +328,8 @@ export default {
             const gridY = this.gridY;
             const width = this.width;
             const height = this.height;
+            const pageX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
+            const pageY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
 
             let delta = {
                 x: (this.axis !== 'y' && this.axis !== 'none' ? stickStartPos.mouseX - pageX : 0) / this.parentScaleX,
