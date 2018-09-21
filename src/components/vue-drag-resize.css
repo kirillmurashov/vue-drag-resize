@@ -11,6 +11,7 @@
     left: 0;
     box-sizing: border-box;
     outline: 1px dashed #d6d6d6;
+    pointer-events: none;
 }
 .vdr-stick {
     box-sizing: border-box;
