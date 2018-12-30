@@ -22,7 +22,7 @@
 
 ### Features
 
-* A lightweight, no-dependency 
+* A lightweight, no-dependency
 * All props are reactive
 * Support touch events
 * Use draggable, resizable or both
@@ -98,7 +98,7 @@ Type: `Boolean`<br>
 Required: `false`<br>
 Default: `false`
 
-Determines whether the component should be active. 
+Determines whether the component should be active.
 
 ```html
 <vue-drag-resize :isActive="true">
@@ -282,6 +282,17 @@ Define the zIndex of the component.
 
 ```html
 <vue-drag-resize :z="999">
+```
+
+#### stickSize
+Type: `Number`<br>
+Required: `false`<br>
+Default `8`
+
+Define the sticks' size.
+
+```html
+<vue-drag-resize :stickSize="12">
 ```
 
 #### sticks
