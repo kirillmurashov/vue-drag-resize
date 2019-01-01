@@ -9,6 +9,8 @@ import {
     DISABLE_RESIZABLE,
     ENABLE_PARENT_LIMITATION,
     DISABLE_PARENT_LIMITATION,
+    ENABLE_SNAP_TO_GRID,
+    DISABLE_SNAP_TO_GRID,
     CHANGE_ZINDEX,
     ENABLE_BOTH_AXIS,
     ENABLE_X_AXIS,
@@ -49,6 +51,13 @@ export default {
     },
     [DISABLE_RESIZABLE](state, id) {
         state.rects[id].resizable = false;
+    },
+
+    [ENABLE_SNAP_TO_GRID](state, id) {
+        state.rects[id].snapToGrid = true;
+    },
+    [DISABLE_SNAP_TO_GRID](state, id) {
+        state.rects[id].snapToGrid = false;
     },
 
     [ENABLE_BOTH_AXIS](state, id) {

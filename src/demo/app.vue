@@ -2,6 +2,7 @@
     <div id="app">
         <div class="list" id="list">
             <VueDragResize v-for="(rect, index) in rects"
+                           :key="index"
                            :w="rect.width"
                            :h="rect.height"
                            :x="rect.left"
@@ -15,6 +16,7 @@
                            :isDraggable="rect.draggable"
                            :isResizable="rect.resizable"
                            :parentLimitation="rect.parentLim"
+                           :snapToGrid="rect.snapToGrid"
                            :aspectRatio="rect.aspectRatio"
                            :z="rect.zIndex"
                            v-on:activated="activateEv(index)"
