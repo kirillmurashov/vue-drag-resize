@@ -7,8 +7,7 @@
   "scripts": {
     "start": "NODE_ENV=develop webpack-dev-server -d",
     "svg": "vsvg -s ./src/demo/svg -t ./src/demo/icons",
-    "build": "webpack",
-    "postinstall": "npm run build"
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -152,7 +151,7 @@
     "vuex": "^3.0.1",
     "watchjs": "0.0.0",
     "watchpack": "^1.5.0",
-    "webpack": "^4.6.0",
+    "webpack": "4.19.1",
     "webpack-bundle-analyzer": "^2.4.0",
     "webpack-cli": "^2.0.14",
     "webpack-dev-middleware": "^3.1.2",
