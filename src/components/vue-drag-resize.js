@@ -1,4 +1,3 @@
-const stickSize = 8;
 const styleMapping = {
     y: {
         t: 'top',
@@ -133,6 +132,10 @@ export default {
             default: function () {
                 return ['tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml']
             }
+        },
+        stickSize: {
+            type: Number,
+            default: 8
         },
         axis: {
             type: String,
@@ -631,11 +634,11 @@ export default {
         vdrStick() {
             return (stick) => {
                 const stickStyle = {
-                    width: `${stickSize / this.parentScaleX}px`,
-                    height: `${stickSize / this.parentScaleY}px`,
+                    width: `${this.stickSize / this.parentScaleX}px`,
+                    height: `${this.stickSize / this.parentScaleY}px`,
                 };
-                stickStyle[styleMapping.y[stick[0]]] = `${stickSize / this.parentScaleX / -2}px`;
-                stickStyle[styleMapping.x[stick[1]]] = `${stickSize / this.parentScaleX / -2}px`;
+                stickStyle[styleMapping.y[stick[0]]] = `${this.stickSize / this.parentScaleX / -2}px`;
+                stickStyle[styleMapping.x[stick[1]]] = `${this.stickSize / this.parentScaleX / -2}px`;
                 return stickStyle;
             }
         },
