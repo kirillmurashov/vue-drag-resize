@@ -7,7 +7,8 @@
   "scripts": {
     "start": "NODE_ENV=develop webpack-dev-server -d",
     "svg": "vsvg -s ./src/demo/svg -t ./src/demo/icons",
-    "build": "webpack"
+    "build": "webpack",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
