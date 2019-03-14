@@ -274,10 +274,10 @@ export default {
 
             this.$emit('clicked', ev);
 
-            if (!this.isDraggable || !this.active) {
+            if (!this.active) {
                 return
             }
-
+            
             if (this.dragHandle && target.getAttribute('data-drag-handle') !== this._uid.toString()) {
                 return
             }
@@ -289,7 +289,9 @@ export default {
             ev.stopPropagation();
             ev.preventDefault();
 
-            this.bodyDrag = true;
+            if (this.isDraggable) {
+                this.bodyDrag = true;
+            }
 
             this.stickStartPos.mouseX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
             this.stickStartPos.mouseY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
