@@ -140,6 +140,11 @@ export default {
             validator: function (val) {
                 return ['x', 'y', 'both', 'none'].indexOf(val) !== -1
             }
+        },
+        contentClass: {
+            type: String,
+            required: false, 
+            default: ""
         }
     },
 

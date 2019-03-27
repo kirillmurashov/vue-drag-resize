@@ -19,6 +19,7 @@
                            :snapToGrid="rect.snapToGrid"
                            :aspectRatio="rect.aspectRatio"
                            :z="rect.zIndex"
+                           :contentClass="rect.class"
                            v-on:activated="activateEv(index)"
                            v-on:deactivated="deactivateEv(index)"
                            v-on:dragging="changePosition($event, index)"
@@ -63,6 +64,10 @@
         right: 300px;
         box-shadow: 0 0 2px #AAA;
         background-color: white;
+    }
+
+    .box-shaddow {
+        box-shadow:  10px 10px 15px 0px rgba(125,125,125,1);
     }
 </style>
 
