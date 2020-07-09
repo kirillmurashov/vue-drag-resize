@@ -318,6 +318,17 @@ Define the zIndex of the component.
 <vue-drag-resize :z="999">
 ```
 
+#### stickSize
+Type: `Number`<br>
+Required: `false`<br>
+Default `8`
+
+Define the sticks' size.
+
+```html
+<vue-drag-resize :stickSize="12">
+```
+
 #### sticks
 Type: `Array`<br>
 Required: `false`<br>

@@ -1,4 +1,3 @@
-const stickSize = 8;
 const styleMapping = {
     y: {
         t: 'top',
@@ -15,6 +14,9 @@ const styleMapping = {
 export default {
     name: 'vue-drag-resize',
     props: {
+        stickSize: {
+          type: Number, default: 8,
+        },
         parentScaleX: {
             type: Number, default: 1,
         },
@@ -631,11 +633,11 @@ export default {
         vdrStick() {
             return (stick) => {
                 const stickStyle = {
-                    width: `${stickSize / this.parentScaleX}px`,
-                    height: `${stickSize / this.parentScaleY}px`,
+                    width: `${this.stickSize / this.parentScaleX}px`,
+                    height: `${this.stickSize / this.parentScaleY}px`,
                 };
-                stickStyle[styleMapping.y[stick[0]]] = `${stickSize / this.parentScaleX / -2}px`;
-                stickStyle[styleMapping.x[stick[1]]] = `${stickSize / this.parentScaleX / -2}px`;
+                stickStyle[styleMapping.y[stick[0]]] = `${this.stickSize / this.parentScaleX / -2}px`;
+                stickStyle[styleMapping.x[stick[1]]] = `${this.stickSize / this.parentScaleX / -2}px`;
                 return stickStyle;
             }
         },
