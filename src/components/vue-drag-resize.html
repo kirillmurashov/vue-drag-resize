@@ -1,5 +1,5 @@
 <div class="vdr" :style="style"
-     :class="active || isActive ? 'active' : 'inactive'"
+     :class="`${(active || isActive) ? 'active' : 'inactive'} ${contentClass ? contentClass: ''}`"
      @mousedown="bodyDown($event)"
      @touchstart="bodyDown($event)"
      @touchend="up($event)">

@@ -379,6 +379,15 @@ Defines a selector that should be used to prevent drag initialization.
 <vue-drag-resize dragCancel=".drag">
 ```
 
+#### contentClass
+Type: `String`<br>
+Required: `false`
+
+Defines a class that is applied on the div with the class vdr
+
+```html
+<vue-drag-resize contentClass="box-shaddow">
+```
 
 
 
