@@ -34,6 +34,7 @@
 * A lightweight, no-dependency 
 * All props are reactive
 * Support touch events
+* Snap element to custom grid
 * Use draggable, resizable or both
 * Define sticks for resizing
 * Save aspect ratio for resizable components
@@ -222,6 +223,39 @@ Limits the scope of the component's change to its parent size.
 <vue-drag-resize :parentLimitation="true">
 ```
 
+#### snapToGrid
+Type: `Boolean`<br>
+Required: `false`<br>
+Default: `false`
+
+Determines whether the component should move and resize in predefined steps.
+
+```html
+<vue-drag-resize :snapToGrid="true">
+```
+
+#### gridX
+Type: `Number`<br>
+Required: `false`<br>
+Default: `50`
+
+Define the grid step size for the horizontal axis. Both sides of the component (left and right) will snap to this step.
+
+```html
+<vue-drag-resize :snapToGrid="true" :gridX="20">
+```
+
+#### gridY
+Type: `Number`<br>
+Required: `false`<br>
+Default: `50`
+
+Define the grid step size for the vertical axis. Both sides of the component (top and bottom) will snap to this step.
+
+```html
+<vue-drag-resize :snapToGrid="true" :gridY="20">
+```
+  
 #### aspectRatio
 Type: `Boolean`<br>
 Required: `false`<br>
