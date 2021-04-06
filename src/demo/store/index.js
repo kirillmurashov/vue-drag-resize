@@ -1,19 +1,16 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
-import rect from './modules/rect'
-
-Vue.use(Vuex);
+import { createStore } from 'vuex';
+import rect from './modules/rect';
 
 const debug = process.env.NODE_ENV !== 'production';
 
-export default new Vuex.Store({
+export default createStore({
     /**
      * Assign the modules to the store
      */
-    modules: {'rect':  rect },
+    modules: { 'rect': rect },
 
     /**
      * If strict mode should be enabled
      */
-    strict: debug
+    strict: debug,
 });

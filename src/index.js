@@ -1,1 +1,1 @@
-export { default } from './components/vue-drag-resize.vue'
+export { default } from './component/vue-drag-resize.vue';

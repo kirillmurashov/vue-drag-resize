@@ -1,208 +1,115 @@
-export default {
-    computed: {
-        activeRect() {
-            return this.$store.getters['rect/getActive'];
-        },
+import { useStore } from 'vuex';
+import { computed, watch, ref } from 'vue';
 
-        width() {
-            return this.activeRect === null ? '' : this.$store.state.rect.rects[this.activeRect].width
-        },
-
-        height() {
-            return this.activeRect === null ? '' : this.$store.state.rect.rects[this.activeRect].height
-        },
-
-        top() {
-            return this.activeRect === null ? '' : this.$store.state.rect.rects[this.activeRect].top
-        },
-
-        left() {
-            return this.activeRect === null ? '' : this.$store.state.rect.rects[this.activeRect].left
-        },
-
-        minw() {
-            return this.activeRect === null ? '' : this.$store.state.rect.rects[this.activeRect].minw
-        },
-
-        minh() {
-            return this.activeRect === null ? '' : this.$store.state.rect.rects[this.activeRect].minh
-        },
-
-        aspectRatio() {
-            return this.activeRect === null ? false : this.$store.state.rect.rects[this.activeRect].aspectRatio;
-        },
-
-        parentLim() {
-            return this.activeRect === null ? false : this.$store.state.rect.rects[this.activeRect].parentLim;
-        },
-
-        draggable() {
-            return this.activeRect === null ? false : this.$store.state.rect.rects[this.activeRect].draggable;
-        },
-
-        resizable() {
-            return this.activeRect === null ? false : this.$store.state.rect.rects[this.activeRect].resizable;
-        },
-
-        snapToGrid() {
-            return this.activeRect === null ? false : this.$store.state.rect.rects[this.activeRect].snapToGrid;
-        },
-
-        topIsLocked() {
-            if (this.activeRect === null) {
-                return false;
-            }
-            return (this.$store.state.rect.rects[this.activeRect].axis === 'x' ||
-                this.$store.state.rect.rects[this.activeRect].axis === 'none')
-        },
-
-        leftIsLocked() {
-            if (this.activeRect === null) {
-                return false;
-            }
-            return (this.$store.state.rect.rects[this.activeRect].axis === 'y' ||
-                this.$store.state.rect.rects[this.activeRect].axis === 'none')
-        },
-
-        zIndex() {
-            if (this.activeRect === null) {
-                return null;
-            }
-
-            return this.$store.state.rect.rects[this.activeRect].zIndex === 1 ? 'isFirst' :
-                this.$store.state.rect.rects[this.activeRect].zIndex === this.$store.state.rect.rects.length ? 'isLast' : 'normal'
-
-        }
-    },
-    methods: {
-        toggleYLock() {
-            if (this.activeRect === null) {
-                return
-            }
-
-            this.$store.dispatch('rect/changeYLock', {id: this.activeRect});
-        },
-        toggleXLock() {
-            if (this.activeRect === null) {
-                return
-            }
-
-            this.$store.dispatch('rect/changeXLock', {id: this.activeRect});
-        },
-
-        toggleAspect() {
-            if (this.activeRect === null) {
-                return
-            }
-            if (!this.$store.state.rect.rects[this.activeRect].aspectRatio) {
-                this.$store.dispatch('rect/setAspect', {id: this.activeRect});
-            } else {
-                this.$store.dispatch('rect/unsetAspect', {id: this.activeRect});
-            }
-        },
-
-        toggleParentLimitation() {
-            this.$store.dispatch('rect/toggleParentLimitation', {id: this.activeRect});
-        },
-
-        toggleResizable() {
-            this.$store.dispatch('rect/toggleResizable', {id: this.activeRect});
-        },
-
-        toggleDraggable() {
-            this.$store.dispatch('rect/toggleDraggable', {id: this.activeRect});
-        },
-
-        toggleSnapToGrid() {
-            this.$store.dispatch('rect/toggleSnapToGrid', {id: this.activeRect});
-        },
-
-        toTop() {
-            this.$store.dispatch('rect/changeZToTop', {id: this.activeRect});
-        },
-
-        toBottom() {
-            this.$store.dispatch('rect/changeZToBottom', {id: this.activeRect});
-        },
-
-        changeMinWidth(ev) {
-            let minw = parseInt(ev.target.value);
-            if (typeof minw !== 'number' || isNaN(minw)) {
-                minw = 1;
-            }
-
-            if (minw <= 0) {
-                minw = 1;
-            } else if (minw > this.$store.state.rect.rects[this.activeRect].width) {
-                minw = this.$store.state.rect.rects[this.activeRect].width;
-            }
-
-            ev.target.value = minw;
-
-            this.$store.dispatch('rect/setMinWidth', {id: this.activeRect, width: minw});
-        },
-
-        changeMinHeight(ev) {
-            let minh = parseInt(ev.target.value);
-
-            if (typeof minh !== 'number' || isNaN(minh)) {
-                minh = 1;
-            }
-
-            if (minh <= 0) {
-                minh = 1;
-            } else if (minh > this.$store.state.rect.rects[this.activeRect].height) {
-                minh = this.$store.state.rect.rects[this.activeRect].height;
-            }
-
-            ev.target.value = minh;
-
-            this.$store.dispatch('rect/setMinHeight', {id: this.activeRect, height: minh});
-        },
-
-        changeTop(ev) {
-            let top = parseInt(ev.target.value);
-
-            if (typeof top !== 'number' || isNaN(top)) {
-                top = this.$store.state.rect.rects[this.activeRect].top;
-                ev.target.value = top;
-                return
-            }
-
-            this.$store.dispatch('rect/setTop', {id: this.activeRect, top: top});
-        },
-
-        changeLeft(ev) {
-            let left = parseInt(ev.target.value);
-
-            if (typeof left !== 'number' || isNaN(left)) {
-                left = this.$store.state.rect.rects[this.activeRect].left;
-                ev.target.value = left;
-            }
-
-            this.$store.dispatch('rect/setLeft', {id: this.activeRect, left: left});
-        },
-
-        changeWidth(ev){
-            let width = parseInt(ev.target.value);
-
-            if (typeof width !== 'number' || isNaN(width)) {
-                width = this.$store.state.rect.rects[this.activeRect].width;
-                ev.target.value = width;
-            }
-
-            this.$store.dispatch('rect/setWidth', {id: this.activeRect, width: width});
-        },
-
-        changeHeight(ev){
-            let height = parseInt(ev.target.value);
-
-            if (typeof height !== 'number' || isNaN(height)) {
-                height = this.$store.state.rect.rects[this.activeRect].height;
-                ev.target.value = height;
-            }
-
-            this.$store.dispatch('rect/setHeight', {id: this.activeRect, height: height});
-        }
+const onlyNumbers = (e) => {
+    if (e.keyCode === 13) {
+        return true;
     }
-}
+    const char = String.fromCharCode(e.keyCode);
+    if (/^[0-9]+$/.test(char)) {
+        return true;
+    }
+
+    e.preventDefault();
+    return false;
+};
+
+export default {
+    name: 'toolbar',
+
+    setup(props, { emit }) {
+        const store = useStore();
+        const showGrid = ref(false);
+        const gridX = ref(50);
+        const gridY = ref(50);
+
+        const activeRect = computed(() => store.getters['rect/activeRect']);
+        const toolsDisabled = computed(() => activeRect.value === null);
+
+        const width = computed({
+            get: () => activeRect.value?.width,
+            set: (val) => store.dispatch('rect/setWidth', parseInt(val, 10)),
+        });
+        const height = computed({
+            get: () => activeRect.value?.height,
+            set: val => store.dispatch('rect/setHeight', parseInt(val, 10)),
+        });
+        const top = computed({
+            get: () => activeRect.value?.top,
+            set: val => store.dispatch('rect/setTop', parseInt(val, 10)),
+        });
+        const left = computed({
+            get: () => activeRect.value?.left,
+            set: val => store.dispatch('rect/setLeft', parseInt(val, 10)),
+        });
+        const minWidth = computed({
+            get: () => activeRect.value?.minw,
+            set: val => store.dispatch('rect/setMinWidth', parseInt(val, 10)),
+        });
+        const minHeight = computed({
+            get: () => activeRect.value?.minh,
+            set: val => store.dispatch('rect/setMinHeight', parseInt(val, 10)),
+        });
+
+        const stickSize = computed({
+            get: () => activeRect.value?.stickSize,
+            set: val => store.dispatch('rect/setStickSize', parseInt(val, 10)),
+        });
+        const snapToGrid = computed({
+            get: () => activeRect.value?.snapToGrid,
+            set: val => store.dispatch('rect/toggleSnapToGrid', val),
+        });
+
+        const aspectRatio = computed({
+            get: () => activeRect.value?.aspectRatio,
+            set: val => store.dispatch('rect/toggleAspectRatio', val),
+        });
+        const leftIsLocked = computed({
+            get: () => activeRect.value?.axis === 'y' || activeRect.value?.axis === 'none',
+            set: val => store.dispatch('rect/changeXLock', val),
+        });
+        const topIsLocked = computed({
+            get: () => activeRect.value?.axis === 'x' || activeRect.value?.axis === 'none',
+            set: val => store.dispatch('rect/changeYLock', val),
+        });
+
+        const isResizable = computed({
+            get: () => activeRect.value?.resizable,
+            set: val => store.dispatch('rect/toggleResizable', val),
+        });
+        const isDraggable = computed({
+            get: () => activeRect.value?.draggable,
+            set: val => store.dispatch('rect/toggleDraggable', val),
+        });
+        const parentLimitation = computed({
+            get: () => activeRect.value?.parentLim,
+            set: val => store.dispatch('rect/toggleParentLimitation', val),
+        });
+
+        watch(showGrid, val => emit('changeGrid', val, { gridX: gridX.value, gridY: gridY.value }));
+        watch(gridX, val => emit('changeGrid', showGrid.value, { gridX: val, gridY: gridY.value }));
+        watch(gridY, val => emit('changeGrid', showGrid.value, { gridX: gridX.value, gridY: val }));
+
+        return {
+            toolsDisabled,
+            onlyNumbers,
+            width,
+            height,
+            top,
+            left,
+            minWidth,
+            gridX,
+            gridY,
+            minHeight,
+            stickSize,
+            snapToGrid,
+            showGrid,
+            isResizable,
+            isDraggable,
+            parentLimitation,
+            aspectRatio,
+            leftIsLocked,
+            topIsLocked
+        };
+    },
+};

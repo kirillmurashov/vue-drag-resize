@@ -1,136 +1,156 @@
 <template>
-    <div id="app">
-        <div class="list" id="list">
-            <VueDragResize v-for="(rect, index) in rects"
-                           :key="index"
-                           :w="rect.width"
-                           :h="rect.height"
-                           :x="rect.left"
-                           :y="rect.top"
-                           :parentW="listWidth"
-                           :parentH="listHeight"
-                           :axis="rect.axis"
-                           :isActive="rect.active"
-                           :minw="rect.minw"
-                           :minh="rect.minh"
-                           :isDraggable="rect.draggable"
-                           :isResizable="rect.resizable"
-                           :parentLimitation="rect.parentLim"
-                           :snapToGrid="rect.snapToGrid"
-                           :aspectRatio="rect.aspectRatio"
-                           :z="rect.zIndex"
-                           :contentClass="rect.class"
-                           v-on:activated="activateEv(index)"
-                           v-on:deactivated="deactivateEv(index)"
-                           v-on:dragging="changePosition($event, index)"
-                           v-on:resizing="changeSize($event, index)"
-            >
-                <div class="filler" :style="{backgroundColor:rect.color}"></div>
-            </VueDragResize>
-        </div>
+    <toolbar @changeGrid='changeGrid'></toolbar>
+    <div class='rect-wrapper' ref='rectWrapper'>
+        <VueDragResize v-for='(rect, index) in rects'
+                       :key='index'
+                       :w='rect.width'
+                       :h='rect.height'
+                       :x='rect.left'
+                       :y='rect.top'
+                       :parentW='wrapperSize.width'
+                       :parentH='wrapperSize.height'
+                       :axis='rect.axis'
+                       :isActive='rect.active'
+                       :minw='rect.minw'
+                       :minh='rect.minh'
+                       :isDraggable='rect.draggable'
+                       :isResizable='rect.resizable'
+                       :parentLimitation='rect.parentLim'
+                       :snapToGrid='rect.snapToGrid'
+                       :gridX='gridX'
+                       :gridY='gridY'
+                       :aspectRatio='rect.aspectRatio'
+                       :z='rect.zIndex'
+                       :contentClass='rect.class'
+                       :stickSize='rect.stickSize'
+                       v-on:activated='activateEv(index)'
+                       v-on:deactivated='deactivateEv(index)'
+                       v-on:dragging='changeDimensions($event, index)'
+                       v-on:resizing='changeDimensions($event, index)'
+        >
+            <div class='filler' :style='{backgroundColor:rect.color}'></div>
+        </VueDragResize>
 
-        <toolbar></toolbar>
+        <div v-for='n in horizontalGridLinesCount' class='horizontal-line' :key='n'
+             :style='"top:" + (gridY * n) + "px"'></div>
+        <div v-for='n in verticalGridLinesCount' class='vertical-line' :key='n'
+             :style='"left:" + (gridX * n) + "px"'></div>
     </div>
 </template>
 
 <style>
-    body {
-        height: 100vh;
-        width: 100vw;
-        background-color: #ECECEC;
-    }
+.horizontal-line {
+    width: 100%;
+    height: 2px;
+    margin-top: -1px;
+    background-color: #f1f1f1;
+    position: absolute;
+}
 
-    #app {
-        margin: 0;
-        box-sizing: border-box;
-        width: 100%;
-        height: 100%;
-        position: relative;
-        font-family: 'Lato', sans-serif;
-    }
+.vertical-line {
+    height: 100%;
+    width: 2px;
+    margin-left: -1px;
+    background-color: #f1f1f1;
+    position: absolute;
+}
 
-    .filler {
-        width: 100%;
-        height: 100%;
-        display: inline-block;
-        position: absolute;
-    }
+.rect-wrapper {
+    position: relative;
+    background-color: #fff;
+    border: 1px solid #EBEDF8;
+}
 
-    .list {
-        position: absolute;
-        top: 30px;
-        bottom: 30px;
-        left: 30px;
-        right: 300px;
-        box-shadow: 0 0 2px #AAA;
-        background-color: white;
-    }
-
-    .box-shaddow {
-        box-shadow:  10px 10px 15px 0px rgba(125,125,125,1);
-    }
+.filler {
+    width: 100%;
+    height: 100%;
+}
 </style>
 
 <script>
-    import VueDragResize from '../components/vue-drag-resize.vue';
-    import toolbar from './components/toolbar/toolbar.vue';
-    import './icons';
+import VueDragResize from '../component/vue-drag-resize.vue';
+import Toolbar from './components/toolbar/toolbar.vue';
 
-    export default {
-        name: 'app',
+import { useStore } from 'vuex';
+import { ref, onMounted, computed, reactive, watch } from 'vue';
 
-        components: {
-            VueDragResize,
-            toolbar
-        },
+export default {
+    name: 'App',
+    components: {
+        VueDragResize,
+        Toolbar,
+    },
+    setup() {
+        const store = useStore();
+        const rectWrapper = ref(null);
+        const gridVisibility = ref(false);
 
-        data(){
-            return {
-                listWidth: 0,
-                listHeight: 0
+        const gridX = ref(50);
+        const gridY = ref(50);
+
+        const verticalGridLinesCount = ref(0);
+        const horizontalGridLinesCount = ref(0);
+
+        const rects = store.state.rect.rects;
+        const wrapperSize = reactive({ width: 0, height: 0 });
+
+        const changeDimensions = (newRect) => {
+            store.dispatch('rect/setTop', newRect.top);
+            store.dispatch('rect/setLeft', newRect.left);
+            store.dispatch('rect/setWidth', newRect.width);
+            store.dispatch('rect/setHeight', newRect.height);
+        };
+
+        const activateEv = (index) => {
+            store.dispatch('rect/setActive', { id: index });
+        };
+
+        const deactivateEv = (index) => {
+            store.dispatch('rect/unsetActive', { id: index });
+        };
+
+        const changeWrapperSize = () => {
+            wrapperSize.width = rectWrapper.value.clientWidth;
+            wrapperSize.height = rectWrapper.value.clientHeight;
+        };
+
+        const changeGrid = (visibility, gridSize) => {
+            gridVisibility.value = visibility;
+
+            gridX.value = gridSize.gridX;
+            gridY.value = gridSize.gridY;
+
+            if (!gridVisibility.value) {
+                verticalGridLinesCount.value = 0;
+                horizontalGridLinesCount.value = 0;
+                return;
             }
-        },
 
-        mounted() {
-            let listEl = document.getElementById('list');
-            this.listWidth = listEl.clientWidth;
-            this.listHeight = listEl.clientHeight;
+            verticalGridLinesCount.value = Math.floor(wrapperSize.width / gridX.value);
+            horizontalGridLinesCount.value = Math.floor(wrapperSize.height / gridY.value);
+        };
 
-            window.addEventListener('resize', ()=>{
-                this.listWidth = listEl.clientWidth;
-                this.listHeight = listEl.clientHeight;
-            })
-        },
+        watch(wrapperSize, () => {
+            changeGrid(gridVisibility.value, { gridX: gridX.value, gridY: gridY.value });
+        });
 
-        computed: {
-            rects() {
-                return this.$store.state.rect.rects
-            }
-        },
 
-        methods: {
-            activateEv(index) {
-                this.$store.dispatch('rect/setActive', {id: index});
-            },
+        onMounted(changeWrapperSize);
+        window.addEventListener('resize', changeWrapperSize);
 
-            deactivateEv(index) {
-                this.$store.dispatch('rect/unsetActive', {id: index});
-            },
-
-            changePosition(newRect, index) {
-
-                this.$store.dispatch('rect/setTop', {id: index, top: newRect.top});
-                this.$store.dispatch('rect/setLeft', {id: index, left: newRect.left});
-                this.$store.dispatch('rect/setWidth', {id: index, width: newRect.width});
-                this.$store.dispatch('rect/setHeight', {id: index, height: newRect.height});
-            },
-
-            changeSize(newRect, index) {
-                this.$store.dispatch('rect/setTop', {id: index, top: newRect.top});
-                this.$store.dispatch('rect/setLeft', {id: index, left: newRect.left});
-                this.$store.dispatch('rect/setWidth', {id: index, width: newRect.width});
-                this.$store.dispatch('rect/setHeight', {id: index, height: newRect.height});
-            }
-        }
-    }
+        return {
+            gridX,
+            gridY,
+            rects,
+            changeGrid,
+            rectWrapper,
+            wrapperSize,
+            activateEv,
+            deactivateEv,
+            changeDimensions,
+            horizontalGridLinesCount,
+            verticalGridLinesCount,
+        };
+    },
+};
 </script>

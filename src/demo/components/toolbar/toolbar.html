@@ -1,63 +1,37 @@
-<div class="toolbar" @mousedown.stop>
-    <div class="toolbar-wh-row">
-        <p class="toolbar-row-title">Position</p>
-        <span class="toolbar-position-inp">top
-            <input :value="top" @keyup="changeTop" />
-
-            <svgicon name="lock"
-                     :color="topIsLocked ? '#42b983 #35495e' : '#AAA'"
-                     width="15"
-                     height="15"
-                     class="position-lock-icon"
-                     @click.native="toggleYLock"
-            ></svgicon>
-        </span>
-        <span class="toolbar-position-inp">left
-            <input :value="left" @keyup="changeLeft" />
-            <svgicon name="lock"
-                     :color="leftIsLocked ? '#42b983 #35495e' : '#AAA'"
-                     width="15"
-                     height="15"
-                     class="position-lock-icon"
-                     @click.native="toggleXLock"
-            ></svgicon>
-        </span>
+<div class='toolbar' @mousedown.stop>
+    <h3 class='toolbar-heading'>Dimensions</h3>
+    <div class='sizes'>
+        <label class='size-label'><input :disabled='toolsDisabled' class='size-input' v-model.lazy='left' @keypress='onlyNumbers'><span>X</span></label>
+        <label class='size-label'><input :disabled='toolsDisabled' class='size-input' v-model.lazy='top' @keypress='onlyNumbers'><span>Y</span></label>
+        <label class='size-label'><input :disabled='toolsDisabled' class='size-input' v-model.lazy='width' @keypress='onlyNumbers'><span>W</span></label>
+        <label class='size-label'><input :disabled='toolsDisabled' class='size-input' v-model.lazy='height' @keypress='onlyNumbers'><span>H</span></label>
+        <label class='checkbox-label'><input :disabled='toolsDisabled' class='checkbox-input' type='checkbox' v-model='aspectRatio'><span>Aspect ratio</span></label>
+        <label class='checkbox-label'><input :disabled='toolsDisabled' class='checkbox-input' type='checkbox' v-model='leftIsLocked'><span>Lock x-axis</span></label>
+        <label class='checkbox-label'><input :disabled='toolsDisabled' class='checkbox-input' type='checkbox' v-model='topIsLocked'><span>Lock y-axis</span></label>
     </div>
-    <div class="toolbar-wh-row">
-        <p class="toolbar-row-title">Size</p>
-        <span class="toolbar-size-inp">width
-            <input :value="width" @keyup="changeWidth" />
-            <svgicon name="lock"
-                     :color="aspectRatio ? '#42b983 #35495e' : '#AAA'"
-                     width="17"
-                     height="17"
-                     class="size-lock-icon"
-                     @click.native="toggleAspect"
-            ></svgicon>
-        </span>
-        <span class="toolbar-size-inp">height
-            <input :value="height" @keyup="changeHeight" />
-        </span>
+    <h3 class='toolbar-heading'>Min size</h3>
+    <div class='sizes'>
+        <label class='size-label'><input :disabled='toolsDisabled' class='size-input' v-model.lazy='minWidth' @keypress='onlyNumbers'><span>minW</span></label>
+        <label class='size-label'><input :disabled='toolsDisabled' class='size-input' v-model.lazy='minHeight' @keypress='onlyNumbers'><span>minH</span></label>
     </div>
 
-    <div class="toolbar-wh-row">
-        <p class="toolbar-row-title">Minimal size</p>
-        <span class="toolbar-size-inp">width
-            <input :value="minw" :disabled="activeRect === null" @keyup="changeMinWidth" />
-        </span>
-        <span class="toolbar-size-inp">height
-            <input :value="minh" :disabled="activeRect === null" @keyup="changeMinHeight" />
-        </span>
+    <h3 class='toolbar-heading'>Stick size</h3>
+    <div class='sizes'>
+        <label class='size-label'><input :disabled='toolsDisabled' class='size-input' v-model.lazy='stickSize' @keypress='onlyNumbers'><span>px</span></label>
     </div>
 
-    <div class="toolbar-wh-row">
-        <p class="toolbar-row-title">Restrictions</p>
-        <label class="toolbar-check-inp"><input type="checkbox" @change="toggleResizable" :checked="resizable" :disabled="activeRect === null" /> isResizable</label>
-        <label class="toolbar-check-inp"><input type="checkbox" @change="toggleDraggable" :checked="draggable" :disabled="activeRect === null" /> isDraggable</label>
-        <label class="toolbar-check-inp"><input type="checkbox" @change="toggleSnapToGrid" :checked="snapToGrid" :disabled="activeRect === null" /> snapToGrid</label>
-        <label class="toolbar-check-inp"><input type="checkbox" @change="toggleParentLimitation" :checked="parentLim" :disabled="activeRect === null" /> parentLimitation</label>
+    <h3 class='toolbar-heading'>Restrictions</h3>
+    <div class='sizes'>
+        <label class='checkbox-label'><input :disabled='toolsDisabled' class='checkbox-input' type='checkbox' v-model='snapToGrid'><span>Snap to grid</span></label>
+        <label class='checkbox-label'><input :disabled='toolsDisabled' class='checkbox-input' type='checkbox' v-model='isResizable'><span>Is resizable</span></label>
+        <label class='checkbox-label'><input :disabled='toolsDisabled' class='checkbox-input' type='checkbox' v-model='isDraggable'><span>Is draggable</span></label>
+        <label class='checkbox-label'><input :disabled='toolsDisabled' class='checkbox-input' type='checkbox' v-model='parentLimitation'><span>Parent limitation</span></label>
+    </div>
 
-        <svgicon name="toBottom" :color="activeRect!==null && zIndex !== 'isFirst' ? '#35495e' : '#AAA'" width="30" height="30" class="to-bottom-icon" @click.native="toBottom"></svgicon>
-        <svgicon name="toTop" :color="activeRect!==null && zIndex !== 'isLast' ? '#35495e' : '#AAA'" width="30" height="30" class="to-top-icon" @click.native="toTop"></svgicon>
+    <h3 class='toolbar-heading'>Layout grid</h3>
+    <div class='sizes'>
+        <label class='size-label'><input class='size-input' v-model.lazy='gridX' @keypress='onlyNumbers'><span>X</span></label>
+        <label class='size-label'><input class='size-input' v-model.lazy='gridY' @keypress='onlyNumbers'><span>Y</span></label>
+        <label class='checkbox-label'><input class='checkbox-input' type='checkbox' v-model='showGrid'><span>Show grid</span></label>
     </div>
 </div>

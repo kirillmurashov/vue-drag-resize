@@ -1,0 +1,51 @@
+{
+  "ignorePatterns": ["dist", "node_modules"],
+  "rules": {
+    "prefer-template": "off",
+    "indent": ["error", 4, { "SwitchCase": 1 }],
+    "object-curly-spacing": ["error", "always"],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1,
+        "maxEOF": 1
+      }
+    ],
+    "no-var": "error",
+    "one-var": ["error", "never"],
+    "camelcase": "error",
+    "no-multi-assign": "error",
+    "quotes": ["error", "single"],
+    "no-array-constructor": "error",
+    "no-new-object": "error",
+    "no-new-wrappers": "error",
+    "no-mixed-spaces-and-tabs": "error",
+    "no-underscore-dangle": ["error", { "allowAfterThis": true }],
+    "no-console": [
+      "error",
+      {
+        "allow": ["error"]
+      }
+    ],
+    "no-template-curly-in-string": "error",
+    "no-self-compare": "error",
+    "func-names": ["error", "as-needed"],
+    "semi": [2, "always"],
+    "import/no-extraneous-dependencies": ["off", { "devDependencies": false }]
+  },
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "extends": ["eslint:recommended", "airbnb-base", "prettier"],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaVersion": 11,
+    "sourceType": "module"
+  },
+  "plugins": ["prettier"],
+  "settings": { "import/resolver": "webpack" }
+}

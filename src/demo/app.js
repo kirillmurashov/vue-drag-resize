@@ -1,15 +1,8 @@
-import Vue from 'vue';
+import './styles/index.css';
+import { createApp } from 'vue';
 import app from './app.vue';
 import store from './store';
-import * as svgicon from 'vue-svgicon';
 
-Vue.use(svgicon, {
-    tagName: 'svgicon'
-});
-
-new Vue({
-    el: '#app',
-    store,
-    template: '<app/>',
-    components: { app }
-});
+const appInstance = createApp(app);
+appInstance.use(store);
+appInstance.mount('#app');

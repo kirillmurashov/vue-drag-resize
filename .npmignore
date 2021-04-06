@@ -1,5 +1,7 @@
 .DS_Store
 node_modules/
 dist/demo.js
+dist/index.html
+dist/assets
 static/
 npm-debug.log

@@ -1,21 +1,22 @@
-import types, {CHANGE_ZINDEX} from './mutation-types';
+import types from './mutation-types';
 
 export default {
-    setActive({commit, state}, {id}) {
-        for (let i = 0, l = state.rects.length; i < l; i++) {
-            if (i === id) {
-                commit(types.ENABLE_ACTIVE, i);
-                continue;
-            }
-
-            commit(types.DISABLE_ACTIVE, i);
+    setActive({ commit, state }, { id }) {
+        if(state.activeRectId !== null){
+            commit(types.DISABLE_ACTIVE, state.activeRectId);
         }
+        commit(types.ENABLE_ACTIVE, id);
     },
-    unsetActive({commit}, {id}) {
+    unsetActive({ commit }, { id }) {
         commit(types.DISABLE_ACTIVE, id);
     },
 
-    toggleDraggable({commit, state}, {id}) {
+    toggleDraggable({ commit, state }) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
+
         if (!state.rects[id].draggable) {
             commit(types.ENABLE_DRAGGABLE, id);
         } else {
@@ -23,7 +24,11 @@ export default {
         }
     },
 
-    toggleResizable({commit, state}, {id}) {
+    toggleResizable({ commit, state }) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
         if (!state.rects[id].resizable) {
             commit(types.ENABLE_RESIZABLE, id);
         } else {
@@ -31,7 +36,11 @@ export default {
         }
     },
 
-    toggleParentLimitation({commit, state}, {id}) {
+    toggleParentLimitation({ commit, state }) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
         if (!state.rects[id].parentLim) {
             commit(types.ENABLE_PARENT_LIMITATION, id);
         } else {
@@ -39,7 +48,11 @@ export default {
         }
     },
 
-    toggleSnapToGrid({commit, state}, {id}) {
+    toggleSnapToGrid({ commit, state }) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
         if (!state.rects[id].snapToGrid) {
             commit(types.ENABLE_SNAP_TO_GRID, id);
         } else {
@@ -47,31 +60,57 @@ export default {
         }
     },
 
-    setAspect({commit}, {id}) {
-        commit(types.ENABLE_ASPECT, id);
-    },
-    unsetAspect({commit}, {id}) {
-        commit(types.DISABLE_ASPECT, id);
-    },
-
-    setWidth({commit}, {id, width}) {
-        commit(types.CHANGE_WIDTH, {id, width});
-    },
-
-    setHeight({commit}, {id, height}) {
-        commit(types.CHANGE_HEIGHT, {id, height});
+    toggleAspectRatio({ commit, state }) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
+        if (!state.rects[id].aspectRatio) {
+            commit(types.ENABLE_ASPECT, id);
+        }else{
+            commit(types.DISABLE_ASPECT, id);
+        }
     },
 
-    setTop({commit}, {id, top}) {
-        commit(types.CHANGE_TOP, {id, top});
+    setWidth({ commit, state }, width) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
+
+        commit(types.CHANGE_WIDTH, { id, width });
     },
 
-    setLeft({commit}, {id, left}) {
-        commit(types.CHANGE_LEFT, {id, left});
+    setHeight({ commit, state }, height) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
+        commit(types.CHANGE_HEIGHT, { id, height });
     },
 
-    changeXLock({commit, state}, {id}) {
-        switch (state.rects[id].axis) {
+    setTop({ commit, state }, top) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
+        commit(types.CHANGE_TOP, { id, top });
+    },
+
+    setLeft({ commit, state }, left) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
+        commit(types.CHANGE_LEFT, { id, left });
+    },
+
+    changeXLock({ commit, state }) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
+        switch(state.rects[id].axis) {
             case 'both':
                 commit(types.ENABLE_Y_AXIS, id);
                 break;
@@ -87,8 +126,13 @@ export default {
         }
     },
 
-    changeYLock({commit, state}, {id}) {
-        switch (state.rects[id].axis) {
+    changeYLock({ commit, state }) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
+
+        switch(state.rects[id].axis) {
             case 'both':
                 commit(types.ENABLE_X_AXIS, id);
                 break;
@@ -104,45 +148,85 @@ export default {
         }
     },
 
-    changeZToBottom({commit, state}, {id}) {
+    changeZToBottom({ commit, state }) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
         if (state.rects[id].zIndex === 1) {
-            return
+            return;
         }
 
-        commit(types.CHANGE_ZINDEX, {id, zIndex: 1});
+        commit(types.CHANGE_ZINDEX, { id, zIndex: 1 });
 
         for (let i = 0, l = state.rects.length; i < l; i++) {
             if (i !== id) {
-                if(state.rects[i].zIndex === state.rects.length){
-                    continue
+                if (state.rects[i].zIndex === state.rects.length) {
+                    continue;
                 }
-                commit(types.CHANGE_ZINDEX, {id: i, zIndex: state.rects[i].zIndex + 1});
+                commit(types.CHANGE_ZINDEX, { id: i, zIndex: state.rects[i].zIndex + 1 });
             }
         }
     },
 
-    changeZToTop({commit, state}, {id}) {
+    changeZToTop({ commit, state }) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
         if (state.rects[id].zIndex === state.rects.length) {
-            return
+            return;
         }
 
-        commit(types.CHANGE_ZINDEX, {id, zIndex: state.rects.length});
+        commit(types.CHANGE_ZINDEX, { id, zIndex: state.rects.length });
 
         for (let i = 0, l = state.rects.length; i < l; i++) {
             if (i !== id) {
-                if(state.rects[i].zIndex === 1){
-                    continue
+                if (state.rects[i].zIndex === 1) {
+                    continue;
                 }
-                commit(types.CHANGE_ZINDEX, {id: i, zIndex: state.rects[i].zIndex - 1});
+                commit(types.CHANGE_ZINDEX, { id: i, zIndex: state.rects[i].zIndex - 1 });
             }
         }
     },
 
-    setMinWidth({commit}, {id, width}) {
-        commit(types.CHANGE_MINW, {id, minw:width});
+    setMinWidth({ commit, state }, width) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
+        commit(types.CHANGE_MINW, { id, minw: width });
     },
 
-    setMinHeight({commit}, {id, height}) {
-        commit(types.CHANGE_MINH, {id, minh:height});
-    }
+    setMinHeight({ commit, state }, height) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
+        commit(types.CHANGE_MINH, { id, minh: height });
+    },
+
+    setGridX({ commit, state }, gridX) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
+        commit(types.CHANGE_GRID_X, { id, gridX });
+    },
+
+    setGridY({ commit, state }, gridY) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
+        commit(types.CHANGE_GRID_Y, { id, gridY });
+    },
+
+    setStickSize({ commit, state }, stickSize) {
+        const id = state.activeRectId;
+        if (id === null) {
+            return;
+        }
+        commit(types.CHANGE_STICK_SIZE, { id, stickSize });
+    },
 };

@@ -31,6 +31,11 @@ export const CHANGE_HEIGHT = 'CHANGE_HEIGHT';
 export const CHANGE_TOP = 'CHANGE_TOP';
 export const CHANGE_LEFT = 'CHANGE_LEFT';
 
+export const CHANGE_GRID_X = 'CHANGE_GRID_X';
+export const CHANGE_GRID_Y = 'CHANGE_GRID_Y';
+
+export const CHANGE_STICK_SIZE = 'CHANGE_STICK_SIZE';
+
 export default {
     ENABLE_ACTIVE,
     DISABLE_ACTIVE,
@@ -54,5 +59,8 @@ export default {
     CHANGE_WIDTH,
     CHANGE_HEIGHT,
     CHANGE_TOP,
-    CHANGE_LEFT
+    CHANGE_LEFT,
+    CHANGE_GRID_X,
+    CHANGE_GRID_Y,
+    CHANGE_STICK_SIZE
 }

@@ -1,7 +1,10 @@
 module.exports = {
+
     plugins: {
-        'postcss-import': {},
-        'postcss-cssnext': {},
-        'cssnano': {autoprefixer: false}
-    }
+        'postcss-preset-env': {
+            preserve: false,
+            importFrom: './src/demo/styles/00vars.css',
+            browsers: 'last 5 versions',
+        },
+    },
 };

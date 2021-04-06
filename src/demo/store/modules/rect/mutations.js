@@ -21,14 +21,21 @@ import {
     CHANGE_MINH,
     CHANGE_MINW,
     CHANGE_TOP,
-    CHANGE_WIDTH
+    CHANGE_WIDTH,
+    CHANGE_GRID_X,
+    CHANGE_GRID_Y,
+    CHANGE_STICK_SIZE
 } from './mutation-types';
 
 export default {
     [ENABLE_ACTIVE](state, id) {
+        state.activeRectId = id;
         state.rects[id].active = true;
     },
     [DISABLE_ACTIVE](state, id) {
+        if(id === state.activeRectId){
+            state.activeRectId = null;
+        }
         state.rects[id].active = false;
     },
 
@@ -101,11 +108,22 @@ export default {
     },
 
     [CHANGE_MINH](state, payload) {
-
         state.rects[payload.id].minh = payload.minh;
     },
 
     [CHANGE_MINW](state, payload) {
         state.rects[payload.id].minw = payload.minw;
-    }
+    },
+
+    [CHANGE_GRID_X](state, payload){
+        state.rects[payload.id].gridX = payload.gridX;
+    },
+
+    [CHANGE_GRID_Y](state, payload){
+        state.rects[payload.id].gridY = payload.gridY;
+    },
+
+    [CHANGE_STICK_SIZE](state, payload){
+        state.rects[payload.id].stickSize = payload.stickSize;
+    },
 };
