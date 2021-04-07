@@ -228,7 +228,7 @@ export default {
         }
     },
 
-    beforeUnmount() {
+    beforeDestroy() {
         removeEvents(this.domEvents);
     },
 
