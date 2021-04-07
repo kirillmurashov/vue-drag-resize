@@ -1,6 +1,6 @@
 {
   "name": "vue-drag-resize",
-  "version": "1.4.2",
+  "version": "1.5.0",
   "description": "Vue Component for resize and drag elements",
   "author": "Kirill Murashov <me@kirillmurashov.com>",
   "main": "dist/index.js",
@@ -169,5 +169,8 @@
     "last 2 versions",
     "not ie <= 9"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "vue-drag-resize": "^1.5.0-rc3"
+  }
 }

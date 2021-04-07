@@ -8,14 +8,29 @@ const styleMapping = {
         l: 'left',
         m: 'marginLeft',
         r: 'right',
-    }
+    },
 };
+
+function addEvents(events) {
+    events.forEach((cb, eventName) => {
+        document.documentElement.addEventListener(eventName, cb);
+    });
+}
+
+function removeEvents(events) {
+    events.forEach((cb, eventName) => {
+        document.documentElement.removeEventListener(eventName, cb);
+    });
+}
 
 export default {
     name: 'vue-drag-resize',
+
+    emits: ['clicked', 'dragging', 'dragstop', 'resizing', 'resizestop', 'activated', 'deactivated'],
+
     props: {
         stickSize: {
-          type: Number, default: 8,
+            type: Number, default: 8,
         },
         parentScaleX: {
             type: Number, default: 1,
@@ -24,333 +39,302 @@ export default {
             type: Number, default: 1,
         },
         isActive: {
-            type: Boolean, default: false
+            type: Boolean, default: false,
         },
         preventActiveBehavior: {
-            type: Boolean, default: false
+            type: Boolean, default: false,
         },
         isDraggable: {
-            type: Boolean, default: true
+            type: Boolean, default: true,
         },
         isResizable: {
-            type: Boolean, default: true
+            type: Boolean, default: true,
         },
         aspectRatio: {
-            type: Boolean, default: false
+            type: Boolean, default: false,
         },
         parentLimitation: {
-            type: Boolean, default: false
+            type: Boolean, default: false,
         },
         snapToGrid: {
-            type: Boolean, default: false
+            type: Boolean, default: false,
         },
         gridX: {
             type: Number,
             default: 50,
-            validator: function (val) {
-                return val > 0
-            }
+            validator(val) {
+                return val > 0;
+            },
         },
         gridY: {
             type: Number,
             default: 50,
-            validator: function (val) {
-                return val > 0
-            }
+            validator(val) {
+                return val > 0;
+            },
         },
         parentW: {
             type: Number,
             default: 0,
-            validator: function (val) {
-                return val >= 0
-            }
+            validator(val) {
+                return val >= 0;
+            },
         },
         parentH: {
             type: Number,
             default: 0,
-            validator: function (val) {
-                return val >= 0
-            }
+            validator(val) {
+                return val >= 0;
+            },
         },
         w: {
             type: Number,
-            default: 100,
-            validator: function (val) {
-                return val > 0
-            }
+            default: 200,
+            validator(val) {
+                return val > 0;
+            },
         },
         h: {
             type: Number,
-            default: 100,
-            validator: function (val) {
-                return val > 0
-            }
+            default: 200,
+            validator(val) {
+                return val > 0;
+            },
         },
         minw: {
             type: Number,
             default: 50,
-            validator: function (val) {
-                return val > 0
-            }
+            validator(val) {
+                return val > 0;
+            },
         },
         minh: {
             type: Number,
             default: 50,
-            validator: function (val) {
-                return val > 0
-            }
+            validator(val) {
+                return val > 0;
+            },
         },
         x: {
             type: Number,
             default: 0,
-            validator: function (val) {
-                return typeof val === 'number'
-            }
+            validator(val) {
+                return typeof val === 'number';
+            },
         },
         y: {
             type: Number,
             default: 0,
-            validator: function (val) {
-                return typeof val === 'number'
-            }
+            validator(val) {
+                return typeof val === 'number';
+            },
         },
         z: {
             type: [String, Number],
             default: 'auto',
-            validator: function (val) {
-                let valid = (typeof val === 'string') ? val === 'auto' : val >= 0;
-                return valid
-            }
+            validator(val) {
+                return (typeof val === 'string') ? val === 'auto' : val >= 0;
+            },
         },
         dragHandle: {
             type: String,
-            default: null
+            default: null,
         },
         dragCancel: {
             type: String,
-            default: null
+            default: null,
         },
         sticks: {
             type: Array,
-            default: function () {
-                return ['tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml']
-            }
+            default() {
+                return ['tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml'];
+            },
         },
         axis: {
             type: String,
             default: 'both',
-            validator: function (val) {
-                return ['x', 'y', 'both', 'none'].indexOf(val) !== -1
-            }
+            validator(val) {
+                return ['x', 'y', 'both', 'none'].indexOf(val) !== -1;
+            },
         },
         contentClass: {
             type: String,
-            required: false, 
-            default: ""
-        }
+            required: false,
+            default: '',
+        },
     },
 
-    data: function () {
+    data() {
         return {
-            active: this.isActive,
-            rawWidth: this.w,
-            rawHeight: this.h,
-            rawLeft: this.x,
-            rawTop: this.y,
-            rawRight: null,
-            rawBottom: null,
-            zIndex: this.z,
-            aspectFactor: this.w / this.h,
+            active: null,
+            zIndex: null,
             parentWidth: null,
             parentHeight: null,
-            left: this.x,
-            top: this.y,
+            left: null,
+            top: null,
             right: null,
             bottom: null,
-            minWidth: this.minw,
-            minHeight: this.minh
-        }
+            minHeight: null,
+        };
     },
 
-    created: function () {
+    beforeCreate() {
         this.stickDrag = false;
         this.bodyDrag = false;
-        this.stickAxis = null;
-        this.stickStartPos = {mouseX: 0, mouseY: 0, x: 0, y: 0, w: 0, h: 0};
+        this.dimensionsBeforeMove = { pointerX: 0, pointerY: 0, x: 0, y: 0, w: 0, h: 0 };
         this.limits = {
-            minLeft: null,
-            maxLeft: null,
-            minRight: null,
-            maxRight: null,
-            minTop: null,
-            maxTop: null,
-            minBottom: null,
-            maxBottom: null
+            left: { min: null, max: null },
+            right: { min: null, max: null },
+            top: { min: null, max: null },
+            bottom: { min: null, max: null },
         };
 
-        this.currentStick = [];
+        this.currentStick = null;
     },
 
-    mounted: function () {
+    mounted() {
         this.parentElement = this.$el.parentNode;
         this.parentWidth = this.parentW ? this.parentW : this.parentElement.clientWidth;
         this.parentHeight = this.parentH ? this.parentH : this.parentElement.clientHeight;
 
-        this.rawRight = this.parentWidth - this.rawWidth - this.rawLeft;
-        this.rawBottom = this.parentHeight - this.rawHeight - this.rawTop;
+        this.left = this.x;
+        this.top = this.y;
+        this.right = this.parentWidth - this.w - this.left;
+        this.bottom = this.parentHeight - this.h - this.top;
 
-        document.documentElement.addEventListener('mousemove', this.move);
-        document.documentElement.addEventListener('mouseup', this.up);
-        document.documentElement.addEventListener('mouseleave', this.up);
+        this.domEvents = new Map([
+            ['mousemove', this.move],
+            ['mouseup', this.up],
+            ['mouseleave', this.up],
+            ['mousedown', this.deselect],
+            ['touchmove', this.move],
+            ['touchend', this.up],
+            ['touchcancel', this.up],
+            ['touchstart', this.up],
+        ]);
 
-        document.documentElement.addEventListener('mousedown', this.deselect);
-
-        document.documentElement.addEventListener('touchmove', this.move, true);
-        document.documentElement.addEventListener('touchend', this.up, true);
-        document.documentElement.addEventListener('touchcancel', this.up, true);
-        document.documentElement.addEventListener('touchstart', this.up, true);
+        addEvents(this.domEvents);
 
         if (this.dragHandle) {
-            let dragHandles = Array.prototype.slice.call(this.$el.querySelectorAll(this.dragHandle));
-            for (let i in dragHandles) {
-                dragHandles[i].setAttribute('data-drag-handle', this._uid);
-            }
+            [...this.$el.querySelectorAll(this.dragHandle)].forEach((dragHandle) => {
+                dragHandle.setAttribute('data-drag-handle', this._uid);
+            });
         }
 
         if (this.dragCancel) {
-            let cancelHandles = Array.prototype.slice.call(this.$el.querySelectorAll(this.dragCancel));
-            for (let i in cancelHandles) {
-                cancelHandles[i].setAttribute('data-drag-cancel', this._uid);
-            }
+            [...this.$el.querySelectorAll(this.dragCancel)].forEach((cancelHandle) => {
+                cancelHandle.setAttribute('data-drag-cancel', this._uid);
+            });
         }
     },
 
-    beforeDestroy: function () {
-        document.documentElement.removeEventListener('mousemove', this.move);
-        document.documentElement.removeEventListener('mouseup', this.up);
-        document.documentElement.removeEventListener('mouseleave', this.up);
-
-        document.documentElement.removeEventListener('mousedown', this.deselect);
-
-        document.documentElement.removeEventListener('touchmove', this.move, true);
-        document.documentElement.removeEventListener('touchend', this.up, true);
-        document.documentElement.removeEventListener('touchcancel', this.up, true);
-        document.documentElement.removeEventListener('touchstart', this.up, true);
+    beforeUnmount() {
+        removeEvents(this.domEvents);
     },
 
     methods: {
         deselect() {
             if (this.preventActiveBehavior) {
-                return
+                return;
             }
-            this.active = false
+            this.active = false;
         },
 
         move(ev) {
             if (!this.stickDrag && !this.bodyDrag) {
-                return
+                return;
             }
 
             ev.stopPropagation();
 
+            const pageX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
+            const pageY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
+
+            const { dimensionsBeforeMove } = this;
+
+            const delta = {
+                x: (dimensionsBeforeMove.pointerX - pageX) / this.parentScaleX,
+                y: (dimensionsBeforeMove.pointerY - pageY) / this.parentScaleY,
+            };
+
             if (this.stickDrag) {
-                this.stickMove(ev);
+                this.stickMove(delta);
             }
+
             if (this.bodyDrag) {
-                this.bodyMove(ev)
+                if (this.axis === 'x') {
+                    delta.y = 0;
+                } else if (this.axis === 'y') {
+                    delta.x = 0;
+                } else if (this.axis === 'none') {
+                    return;
+                }
+                this.bodyMove(delta);
             }
         },
 
         up(ev) {
             if (this.stickDrag) {
                 this.stickUp(ev);
-            }
-            if (this.bodyDrag) {
-                this.bodyUp(ev)
+            } else if (this.bodyDrag) {
+                this.bodyUp(ev);
             }
         },
 
-        bodyDown: function (ev) {
-            let target = ev.target || ev.srcElement;
+        bodyDown(ev) {
+            const { target, button } = ev;
 
             if (!this.preventActiveBehavior) {
                 this.active = true;
             }
 
-            if (ev.button && ev.button !== 0) {
-                return
+            if (button && button !== 0) {
+                return;
             }
 
             this.$emit('clicked', ev);
 
             if (!this.active) {
-                return
+                return;
             }
-            
+
             if (this.dragHandle && target.getAttribute('data-drag-handle') !== this._uid.toString()) {
-                return
+                return;
             }
 
             if (this.dragCancel && target.getAttribute('data-drag-cancel') === this._uid.toString()) {
-                return
+                return;
             }
 
-            ev.stopPropagation();
-            ev.preventDefault();
+            if (typeof ev.stopPropagation !== 'undefined') {
+                ev.stopPropagation();
+            }
+
+            if (typeof ev.preventDefault !== 'undefined') {
+                ev.preventDefault();
+            }
 
             if (this.isDraggable) {
                 this.bodyDrag = true;
             }
 
-            this.stickStartPos.mouseX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
-            this.stickStartPos.mouseY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
+            const pointerX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
+            const pointerY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
 
-            this.stickStartPos.left = this.left;
-            this.stickStartPos.right = this.right;
-            this.stickStartPos.top = this.top;
-            this.stickStartPos.bottom = this.bottom;
+            this.saveDimensionsBeforeMove({ pointerX, pointerY });
 
             if (this.parentLimitation) {
                 this.limits = this.calcDragLimitation();
             }
         },
 
-        calcDragLimitation() {
-            const parentWidth = this.parentWidth;
-            const parentHeight = this.parentHeight;
+        bodyMove(delta) {
+            const { dimensionsBeforeMove, parentWidth, parentHeight, gridX, gridY, width, height } = this;
 
-            return {
-                minLeft: 0,
-                maxLeft: parentWidth - this.width,
-                minRight: 0,
-                maxRight: parentWidth - this.width,
-                minTop: 0,
-                maxTop: parentHeight - this.height,
-                minBottom: 0,
-                maxBottom: parentHeight - this.height
-            }
-        },
-
-        bodyMove(ev) {
-            const stickStartPos = this.stickStartPos;
-            const parentWidth = this.parentWidth;
-            const parentHeight = this.parentHeight;
-            const gridX = this.gridX;
-            const gridY = this.gridY;
-            const width = this.width;
-            const height = this.height;
-            const pageX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
-            const pageY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
-
-            let delta = {
-                x: (this.axis !== 'y' && this.axis !== 'none' ? stickStartPos.mouseX - pageX : 0) / this.parentScaleX,
-                y: (this.axis !== 'x' && this.axis !== 'none' ? stickStartPos.mouseY - pageY : 0) / this.parentScaleY
-            };
-
-            let newTop = stickStartPos.top - delta.y;
-            let newBottom = stickStartPos.bottom + delta.y;
-            let newLeft = stickStartPos.left - delta.x;
-            let newRight = stickStartPos.right + delta.x;
+            let newTop = dimensionsBeforeMove.top - delta.y;
+            let newBottom = dimensionsBeforeMove.bottom + delta.y;
+            let newLeft = dimensionsBeforeMove.left - delta.x;
+            let newRight = dimensionsBeforeMove.right + delta.x;
 
             if (this.snapToGrid) {
                 let alignTop = true;
@@ -361,24 +345,39 @@ export default {
                 let diffL = newLeft - Math.floor(newLeft / gridX) * gridX;
                 let diffR = (parentWidth - newRight) - Math.floor((parentWidth - newRight) / gridX) * gridX;
 
-                if (diffT > (gridY / 2)) { diffT = diffT - gridY; }
-                if (diffB > (gridY / 2)) { diffB = diffB - gridY; }
-                if (diffL > (gridX / 2)) { diffL = diffL - gridX; }
-                if (diffR > (gridX / 2)) { diffR = diffR - gridX; }
+                if (diffT > (gridY / 2)) {
+                    diffT -= gridY;
+                }
+                if (diffB > (gridY / 2)) {
+                    diffB -= gridY;
+                }
+                if (diffL > (gridX / 2)) {
+                    diffL -= gridX;
+                }
+                if (diffR > (gridX / 2)) {
+                    diffR -= gridX;
+                }
 
-                if (Math.abs(diffB) < Math.abs(diffT)) { alignTop = false; }
-                if (Math.abs(diffR) < Math.abs(diffL)) { alignLeft = false; }
+                if (Math.abs(diffB) < Math.abs(diffT)) {
+                    alignTop = false;
+                }
+                if (Math.abs(diffR) < Math.abs(diffL)) {
+                    alignLeft = false;
+                }
 
-                newTop = newTop - (alignTop ? diffT : diffB);
+                newTop -= (alignTop ? diffT : diffB);
                 newBottom = parentHeight - height - newTop;
-                newLeft = newLeft - (alignLeft ? diffL : diffR);
+                newLeft -= (alignLeft ? diffL : diffR);
                 newRight = parentWidth - width - newLeft;
             }
 
-            this.rawTop = newTop;
-            this.rawBottom = newBottom;
-            this.rawLeft = newLeft;
-            this.rawRight = newRight;
+            ({
+                newLeft: this.left,
+                newRight: this.right,
+                newTop: this.top,
+                newBottom: this.bottom,
+            } = this.rectCorrectionByLimit({ newLeft, newRight, newTop, newBottom }));
+
             this.$emit('dragging', this.rect);
         },
 
@@ -387,244 +386,295 @@ export default {
             this.$emit('dragging', this.rect);
             this.$emit('dragstop', this.rect);
 
-            this.stickStartPos = {mouseX: 0, mouseY: 0, x: 0, y: 0, w: 0, h: 0};
+            this.dimensionsBeforeMove = { pointerX: 0, pointerY: 0, x: 0, y: 0, w: 0, h: 0 };
+
             this.limits = {
-                minLeft: null,
-                maxLeft: null,
-                minRight: null,
-                maxRight: null,
-                minTop: null,
-                maxTop: null,
-                minBottom: null,
-                maxBottom: null
+                left: { min: null, max: null },
+                right: { min: null, max: null },
+                top: { min: null, max: null },
+                bottom: { min: null, max: null },
             };
         },
 
-        stickDown: function (stick, ev) {
+        stickDown(stick, ev) {
             if (!this.isResizable || !this.active) {
-                return
+                return;
             }
 
             this.stickDrag = true;
-            this.stickStartPos.mouseX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
-            this.stickStartPos.mouseY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
-            this.stickStartPos.left = this.left;
-            this.stickStartPos.right = this.right;
-            this.stickStartPos.top = this.top;
-            this.stickStartPos.bottom = this.bottom;
-            this.currentStick = stick.split('');
-            this.stickAxis = null;
 
-            switch (this.currentStick[0]) {
-                case 'b':
-                    this.stickAxis = 'y';
-                    break;
-                case 't':
-                    this.stickAxis = 'y';
-                    break;
-            }
-            switch (this.currentStick[1]) {
-                case 'r':
-                    this.stickAxis = this.stickAxis === 'y' ? 'xy' : 'x';
-                    break;
-                case 'l':
-                    this.stickAxis = this.stickAxis === 'y' ? 'xy' : 'x';
-                    break;
-            }
+            const pointerX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
+            const pointerY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
 
+            this.saveDimensionsBeforeMove({ pointerX, pointerY });
 
-            this.limits = this.calcResizeLimitation();
+            this.currentStick = stick;
+
+            this.limits = this.calcResizeLimits();
         },
 
-        calcResizeLimitation() {
-            let minw = this.minWidth;
-            let minh = this.minHeight;
-            const aspectFactor = this.aspectFactor;
-            const width = this.width;
-            const height = this.height;
-            const bottom = this.bottom;
-            const top = this.top;
-            const left = this.left;
-            const right = this.right;
-            const stickAxis = this.stickAxis;
+        saveDimensionsBeforeMove({ pointerX, pointerY }) {
+            this.dimensionsBeforeMove.pointerX = pointerX;
+            this.dimensionsBeforeMove.pointerY = pointerY;
 
-            const parentLim = this.parentLimitation ? 0 : null;
+            this.dimensionsBeforeMove.left = this.left;
+            this.dimensionsBeforeMove.right = this.right;
+            this.dimensionsBeforeMove.top = this.top;
+            this.dimensionsBeforeMove.bottom = this.bottom;
 
-            if (this.aspectRatio) {
-                if (minw / minh > aspectFactor) {
-                    minh = minw / aspectFactor;
-                } else {
-                    minw = aspectFactor * minh;
-                }
-            }
+            this.dimensionsBeforeMove.width = this.width;
+            this.dimensionsBeforeMove.height = this.height;
 
-            let limits = {
-                minLeft: parentLim,
-                maxLeft: left + (width - minw),
-                minRight: parentLim,
-                maxRight: right + (width - minw),
-                minTop: parentLim,
-                maxTop: top + (height - minh),
-                minBottom: parentLim,
-                maxBottom: bottom + (height - minh)
-            };
-
-            if (this.aspectRatio) {
-                const aspectLimits = {
-                    minLeft: left - (Math.min(top, bottom) * aspectFactor) * 2,
-                    maxLeft: left + ((((height - minh) / 2) * aspectFactor) * 2),
-
-                    minRight: right - (Math.min(top, bottom) * aspectFactor) * 2,
-                    maxRight: right + ((((height - minh) / 2) * aspectFactor) * 2),
-
-                    minTop: top - (Math.min(left, right) / aspectFactor) * 2,
-                    maxTop: top + ((((width - minw) / 2) / aspectFactor) * 2),
-
-                    minBottom: bottom - (Math.min(left, right) / aspectFactor) * 2,
-                    maxBottom: bottom + ((((width - minw) / 2) / aspectFactor) * 2)
-                };
-
-                if (stickAxis === 'x') {
-                    limits = {
-                        minLeft: Math.max(limits.minLeft, aspectLimits.minLeft),
-                        maxLeft: Math.min(limits.maxLeft, aspectLimits.maxLeft),
-                        minRight: Math.max(limits.minRight, aspectLimits.minRight),
-                        maxRight: Math.min(limits.maxRight, aspectLimits.maxRight)
-                    }
-                } else if (stickAxis === 'y') {
-                    limits = {
-                        minTop: Math.max(limits.minTop, aspectLimits.minTop),
-                        maxTop: Math.min(limits.maxTop, aspectLimits.maxTop),
-                        minBottom: Math.max(limits.minBottom, aspectLimits.minBottom),
-                        maxBottom: Math.min(limits.maxBottom, aspectLimits.maxBottom)
-                    }
-                }
-            }
-
-
-            return limits;
+            this.aspectFactor = this.width / this.height;
         },
 
-        stickMove(ev) {
-            const stickStartPos = this.stickStartPos;
-            const pageX = typeof ev.pageX !== 'undefined' ? ev.pageX : ev.touches[0].pageX;
-            const pageY = typeof ev.pageY !== 'undefined' ? ev.pageY : ev.touches[0].pageY;
+        stickMove(delta) {
+            const {
+                currentStick,
+                dimensionsBeforeMove,
+                gridY,
+                gridX,
+                snapToGrid,
+                parentHeight,
+                parentWidth,
+            } = this;
 
-            const delta = {
-                x: (stickStartPos.mouseX - pageX) / this.parentScaleX,
-                y: (stickStartPos.mouseY - pageY) / this.parentScaleY
-            };
+            let newTop = dimensionsBeforeMove.top;
+            let newBottom = dimensionsBeforeMove.bottom;
+            let newLeft = dimensionsBeforeMove.left;
+            let newRight = dimensionsBeforeMove.right;
 
-            let newTop = stickStartPos.top - delta.y;
-            let newBottom = stickStartPos.bottom + delta.y;
-            let newLeft = stickStartPos.left - delta.x;
-            let newRight = stickStartPos.right + delta.x;
-
-            switch (this.currentStick[0]) {
+            switch(currentStick[0]) {
                 case 'b':
+                    newBottom = dimensionsBeforeMove.bottom + delta.y;
 
-                    if (this.snapToGrid) {
-                        newBottom = this.parentHeight - Math.round((this.parentHeight - newBottom) / this.gridY) * this.gridY;
+                    if (snapToGrid) {
+                        newBottom = parentHeight - Math.round((parentHeight - newBottom) / gridY) * gridY;
                     }
 
-                    this.rawBottom = newBottom;
                     break;
 
                 case 't':
+                    newTop = dimensionsBeforeMove.top - delta.y;
 
-                    if (this.snapToGrid) {
-                        newTop = Math.round(newTop / this.gridY) * this.gridY;
+                    if (snapToGrid) {
+                        newTop = Math.round(newTop / gridY) * gridY;
                     }
 
-                    this.rawTop = newTop;
+                    break;
+                default:
                     break;
             }
 
-            switch (this.currentStick[1]) {
+            switch(currentStick[1]) {
                 case 'r':
+                    newRight = dimensionsBeforeMove.right + delta.x;
 
-                    if (this.snapToGrid) {
-                        newRight = this.parentWidth - Math.round((this.parentWidth - newRight) / this.gridX) * this.gridX;
+                    if (snapToGrid) {
+                        newRight = parentWidth - Math.round((parentWidth - newRight) / gridX) * gridX;
                     }
 
-                    this.rawRight = newRight;
                     break;
 
                 case 'l':
+                    newLeft = dimensionsBeforeMove.left - delta.x;
 
-                    if (this.snapToGrid) {
-                        newLeft = Math.round(newLeft / this.gridX) * this.gridX;
+                    if (snapToGrid) {
+                        newLeft = Math.round(newLeft / gridX) * gridX;
                     }
 
-                    this.rawLeft = newLeft;
+                    break;
+                default:
                     break;
             }
+
+            ({
+                newLeft,
+                newRight,
+                newTop,
+                newBottom,
+            } = this.rectCorrectionByLimit({ newLeft, newRight, newTop, newBottom }));
+
+            if (this.aspectRatio) {
+                ({
+                    newLeft,
+                    newRight,
+                    newTop,
+                    newBottom,
+                } = this.rectCorrectionByAspectRatio({ newLeft, newRight, newTop, newBottom }));
+            }
+
+            this.left = newLeft;
+            this.right = newRight;
+            this.top = newTop;
+            this.bottom = newBottom;
 
             this.$emit('resizing', this.rect);
         },
 
         stickUp() {
             this.stickDrag = false;
-            this.stickStartPos = {
-                mouseX: 0,
-                mouseY: 0,
+            this.dimensionsBeforeMove = {
+                pointerX: 0,
+                pointerY: 0,
                 x: 0,
                 y: 0,
                 w: 0,
-                h: 0
+                h: 0,
             };
             this.limits = {
-                minLeft: null,
-                maxLeft: null,
-                minRight: null,
-                maxRight: null,
-                minTop: null,
-                maxTop: null,
-                minBottom: null,
-                maxBottom: null
+                left: { min: null, max: null },
+                right: { min: null, max: null },
+                top: { min: null, max: null },
+                bottom: { min: null, max: null },
             };
-            this.rawTop = this.top;
-            this.rawBottom = this.bottom;
-            this.rawLeft = this.left;
-            this.rawRight = this.right;
-
-            this.stickAxis = null;
 
             this.$emit('resizing', this.rect);
             this.$emit('resizestop', this.rect);
         },
 
-        aspectRatioCorrection() {
-            if (!this.aspectRatio) {
-                return
+        calcDragLimitation() {
+            const { parentWidth, parentHeight } = this;
+
+            return {
+                left: { min: 0, max: parentWidth - this.width },
+                right: { min: 0, max: parentWidth - this.width },
+                top: { min: 0, max: parentHeight - this.height },
+                bottom: { min: 0, max: parentHeight - this.height },
+            };
+        },
+
+        calcResizeLimits() {
+            const { aspectFactor, width, height, bottom, top, left, right } = this;
+            let { minh: minHeight, minw: minWidth } = this;
+
+            const parentLim = this.parentLimitation ? 0 : null;
+
+            if (this.aspectRatio) {
+                if (minWidth / minHeight > aspectFactor) {
+                    minHeight = minWidth / aspectFactor;
+                } else {
+                    minWidth = aspectFactor * minHeight;
+                }
             }
 
-            const bottom = this.bottom;
-            const top = this.top;
-            const left = this.left;
-            const right = this.right;
-            const width = this.width;
-            const height = this.height;
-            const aspectFactor = this.aspectFactor;
-            const currentStick = this.currentStick;
+            const limits = {
+                left: { min: parentLim, max: left + (width - minWidth) },
+                right: { min: parentLim, max: right + (width - minWidth) },
+                top: { min: parentLim, max: top + (height - minHeight) },
+                bottom: { min: parentLim, max: bottom + (height - minHeight) },
+            };
 
-            if (width / height > aspectFactor) {
-                let newWidth = aspectFactor * height;
+            if (this.aspectRatio) {
+                const aspectLimits = {
+                    left: {
+                        min: left - (Math.min(top, bottom) * aspectFactor) * 2,
+                        max: left + ((((height - minHeight) / 2) * aspectFactor) * 2),
+                    },
+                    right: {
+                        min: right - (Math.min(top, bottom) * aspectFactor) * 2,
+                        max: right + ((((height - minHeight) / 2) * aspectFactor) * 2),
+                    },
+                    top: {
+                        min: top - (Math.min(left, right) / aspectFactor) * 2,
+                        max: top + ((((width - minWidth) / 2) / aspectFactor) * 2),
+                    },
+                    bottom: {
+                        min: bottom - (Math.min(left, right) / aspectFactor) * 2,
+                        max: bottom + ((((width - minWidth) / 2) / aspectFactor) * 2),
+                    },
+                };
+
+                if (this.currentStick[0] === 'm') {
+                    limits.left = {
+                        min: Math.max(limits.left.min, aspectLimits.left.min),
+                        max: Math.min(limits.left.max, aspectLimits.left.max),
+                    };
+                    limits.right = {
+                        min: Math.max(limits.right.min, aspectLimits.right.min),
+                        max: Math.min(limits.right.max, aspectLimits.right.max),
+                    };
+
+                } else if (this.currentStick[1] === 'm') {
+                    limits.top = {
+                        min: Math.max(limits.top.min, aspectLimits.top.min),
+                        max: Math.min(limits.top.max, aspectLimits.top.max),
+                    };
+                    limits.bottom = {
+                        min: Math.max(limits.bottom.min, aspectLimits.bottom.min),
+                        max: Math.min(limits.bottom.max, aspectLimits.bottom.max),
+                    };
+                }
+            }
+
+            return limits;
+        },
+
+        sideCorrectionByLimit(limit, current) {
+            let value = current;
+
+            if (limit.min !== null && current < limit.min) {
+                value = limit.min;
+            } else if (limit.max !== null && limit.max < current) {
+                value = limit.max;
+            }
+
+            return value;
+        },
+
+        rectCorrectionByLimit(rect) {
+            const { limits } = this;
+            let { newRight, newLeft, newBottom, newTop } = rect;
+
+            newLeft = this.sideCorrectionByLimit(limits.left, newLeft);
+            newRight = this.sideCorrectionByLimit(limits.right, newRight);
+            newTop = this.sideCorrectionByLimit(limits.top, newTop);
+            newBottom = this.sideCorrectionByLimit(limits.bottom, newBottom);
+
+            return {
+                newLeft,
+                newRight,
+                newTop,
+                newBottom,
+            };
+        },
+
+        rectCorrectionByAspectRatio(rect) {
+            let { newLeft, newRight, newTop, newBottom } = rect;
+            const { parentWidth, parentHeight, currentStick, aspectFactor, dimensionsBeforeMove } = this;
+
+            let newWidth = parentWidth - newLeft - newRight;
+            let newHeight = parentHeight - newTop - newBottom;
+
+            if (currentStick[1] === 'm') {
+                const deltaHeight = newHeight - dimensionsBeforeMove.height;
+
+                newLeft -= (deltaHeight * aspectFactor) / 2;
+                newRight -= (deltaHeight * aspectFactor) / 2;
+            } else if (currentStick[0] === 'm') {
+                const deltaWidth = newWidth - dimensionsBeforeMove.width;
+
+                newTop -= (deltaWidth / aspectFactor) / 2;
+                newBottom -= (deltaWidth / aspectFactor) / 2;
+            } else if (newWidth / newHeight > aspectFactor) {
+                newWidth = aspectFactor * newHeight;
 
                 if (currentStick[1] === 'l') {
-                    this.left = left + width - newWidth;
+                    newLeft = parentWidth - newRight - newWidth;
                 } else {
-                    this.right = right + width - newWidth;
+                    newRight = parentWidth - newLeft - newWidth;
                 }
             } else {
-                let newHeight = width / aspectFactor;
+                newHeight = newWidth / aspectFactor;
 
                 if (currentStick[0] === 't') {
-                    this.top = top + height - newHeight;
+                    newTop = parentHeight - newBottom - newHeight;
                 } else {
-                    this.bottom = bottom + height - newHeight;
+                    newBottom = parentHeight - newTop - newHeight;
                 }
             }
+
+            return { newLeft, newRight, newTop, newBottom };
         },
     },
 
@@ -635,8 +685,8 @@ export default {
                 left: this.left + 'px',
                 width: this.width + 'px',
                 height: this.height + 'px',
-                zIndex: this.zIndex
-            }
+                zIndex: this.zIndex,
+            };
         },
 
         vdrStick() {
@@ -648,7 +698,7 @@ export default {
                 stickStyle[styleMapping.y[stick[0]]] = `${this.stickSize / this.parentScaleX / -2}px`;
                 stickStyle[styleMapping.x[stick[1]]] = `${this.stickSize / this.parentScaleX / -2}px`;
                 return stickStyle;
-            }
+            };
         },
 
         width() {
@@ -664,116 +714,12 @@ export default {
                 left: Math.round(this.left),
                 top: Math.round(this.top),
                 width: Math.round(this.width),
-                height: Math.round(this.height)
-            }
-        }
+                height: Math.round(this.height),
+            };
+        },
     },
 
     watch: {
-        rawLeft(newLeft) {
-            const limits = this.limits;
-            const stickAxis = this.stickAxis;
-            const aspectFactor = this.aspectFactor;
-            const aspectRatio = this.aspectRatio;
-            const left = this.left;
-            const bottom = this.bottom;
-            const top = this.top;
-
-            if (limits.minLeft !== null && newLeft < limits.minLeft) {
-                newLeft = limits.minLeft;
-            } else if (limits.maxLeft !== null && limits.maxLeft < newLeft) {
-                newLeft = limits.maxLeft;
-            }
-
-            if (aspectRatio && stickAxis === 'x') {
-                const delta = left - newLeft;
-                this.rawTop = top - (delta / aspectFactor) / 2;
-                this.rawBottom = bottom - (delta / aspectFactor) / 2;
-            }
-
-            this.left = newLeft;
-        },
-
-        rawRight(newRight) {
-            const limits = this.limits;
-            const stickAxis = this.stickAxis;
-            const aspectFactor = this.aspectFactor;
-            const aspectRatio = this.aspectRatio;
-            const right = this.right;
-            const bottom = this.bottom;
-            const top = this.top;
-
-            if (limits.minRight !== null && newRight < limits.minRight) {
-                newRight = limits.minRight;
-            } else if (limits.maxRight !== null && limits.maxRight < newRight) {
-                newRight = limits.maxRight;
-            }
-
-            if (aspectRatio && stickAxis === 'x') {
-                const delta = right - newRight;
-                this.rawTop = top - (delta / aspectFactor) / 2;
-                this.rawBottom = bottom - (delta / aspectFactor) / 2;
-            }
-
-            this.right = newRight;
-        },
-
-        rawTop(newTop) {
-            const limits = this.limits;
-            const stickAxis = this.stickAxis;
-            const aspectFactor = this.aspectFactor;
-            const aspectRatio = this.aspectRatio;
-            const right = this.right;
-            const left = this.left;
-            const top = this.top;
-
-            if (limits.minTop !== null && newTop < limits.minTop) {
-                newTop = limits.minTop;
-            } else if (limits.maxTop !== null && limits.maxTop < newTop) {
-                newTop = limits.maxTop;
-            }
-
-            if (aspectRatio && stickAxis === 'y') {
-                const delta = top - newTop;
-                this.rawLeft = left - (delta * aspectFactor) / 2;
-                this.rawRight = right - (delta * aspectFactor) / 2;
-            }
-
-            this.top = newTop;
-        },
-
-        rawBottom(newBottom) {
-            const limits = this.limits;
-            const stickAxis = this.stickAxis;
-            const aspectFactor = this.aspectFactor;
-            const aspectRatio = this.aspectRatio;
-            const right = this.right;
-            const left = this.left;
-            const bottom = this.bottom;
-
-            if (limits.minBottom !== null && newBottom < limits.minBottom) {
-                newBottom = limits.minBottom;
-            } else if (limits.maxBottom !== null && limits.maxBottom < newBottom) {
-                newBottom = limits.maxBottom;
-            }
-
-            if (aspectRatio && stickAxis === 'y') {
-                const delta = bottom - newBottom;
-                this.rawLeft = left - (delta * aspectFactor) / 2;
-                this.rawRight = right - (delta * aspectFactor) / 2;
-            }
-
-            this.bottom = newBottom;
-        },
-
-        width() {
-            this.aspectRatioCorrection();
-        },
-
-        height() {
-            this.aspectRatioCorrection();
-        },
-
         active(isActive) {
             if (isActive) {
                 this.$emit('activated');
@@ -782,103 +728,100 @@ export default {
             }
         },
 
-        isActive(val) {
-            this.active = val;
+        isActive: {
+            immediate: true,
+            handler(val) {
+                this.active = val;
+            },
         },
 
-        z(val) {
-            if (val >= 0 || val === 'auto') {
-                this.zIndex = val
-            }
+        z: {
+            immediate: true,
+            handler(val) {
+                if (val >= 0 || val === 'auto') {
+                    this.zIndex = val;
+                }
+            },
         },
 
-        aspectRatio(val) {
-            if (val) {
-                this.aspectFactor = this.width / this.height;
-            }
+        x: {
+            handler(newVal, oldVal) {
+                if (this.stickDrag || this.bodyDrag || (newVal === this.left)) {
+                    return;
+                }
+
+                const delta = oldVal - newVal;
+
+                this.bodyDown({ pageX: this.left, pageY: this.top });
+                this.bodyMove({ x: delta, y: 0 });
+
+                this.$nextTick(() => {
+                    this.bodyUp();
+                });
+            },
         },
 
-        minw(val) {
-            if (val > 0 && val <= this.width) {
-                this.minWidth = val
-            }
+        y: {
+            handler(newVal, oldVal) {
+                if (this.stickDrag || this.bodyDrag || (newVal === this.top)) {
+                    return;
+                }
+
+                const delta = oldVal - newVal;
+
+                this.bodyDown({ pageX: this.left, pageY: this.top });
+                this.bodyMove({ x: 0, y: delta });
+
+                this.$nextTick(() => {
+                    this.bodyUp();
+                });
+            },
         },
 
-        minh(val) {
-            if (val > 0 && val <= this.height) {
-                this.minHeight = val
-            }
+        w: {
+            handler(newVal, oldVal) {
+                if (this.stickDrag || this.bodyDrag || (newVal === this.width)) {
+                    return;
+                }
+
+                const stick = 'mr';
+                const delta = oldVal - newVal;
+
+                this.stickDown(stick, { pageX: this.right, pageY: this.top + (this.height / 2) });
+                this.stickMove({ x: delta, y: 0 });
+
+                this.$nextTick(() => {
+                    this.stickUp();
+                });
+            },
         },
 
-        x() {
-            if (this.stickDrag || this.bodyDrag) {
-                return
-            }
-            if (this.parentLimitation) {
-                this.limits = this.calcDragLimitation();
-            }
+        h: {
+            handler(newVal, oldVal) {
+                if (this.stickDrag || this.bodyDrag || (newVal === this.height)) {
+                    return;
+                }
 
-            let delta = this.x - this.left;
-            this.rawLeft = this.x;
-            this.rawRight = this.right - delta;
-        },
+                const stick = 'bm';
+                const delta = oldVal - newVal;
 
-        y() {
-            if (this.stickDrag || this.bodyDrag) {
-                return
-            }
+                this.stickDown(stick, { pageX: this.left + (this.width / 2), pageY: this.bottom });
+                this.stickMove({ x: 0, y: delta });
 
-            if (this.parentLimitation) {
-                this.limits = this.calcDragLimitation();
-            }
-
-            let delta = this.y - this.top;
-            this.rawTop = this.y;
-            this.rawBottom = this.bottom - delta;
-        },
-
-        w() {
-            if (this.stickDrag || this.bodyDrag) {
-                return
-            }
-
-            this.currentStick = ['m', 'r'];
-            this.stickAxis = 'x';
-
-            if (this.parentLimitation) {
-                this.limits = this.calcResizeLimitation();
-            }
-
-            let delta = this.width - this.w;
-            this.rawRight = this.right + delta;
-        },
-
-        h() {
-            if (this.stickDrag || this.bodyDrag) {
-                return
-            }
-
-            this.currentStick = ['b', 'm'];
-            this.stickAxis = 'y';
-
-            if (this.parentLimitation) {
-                this.limits = this.calcResizeLimitation();
-            }
-
-            let delta = this.height - this.h;
-            this.rawBottom = this.bottom + delta;
+                this.$nextTick(() => {
+                    this.stickUp();
+                });
+            },
         },
 
         parentW(val) {
             this.right = val - this.width - this.left;
             this.parentWidth = val;
-
         },
 
         parentH(val) {
             this.bottom = val - this.height - this.top;
             this.parentHeight = val;
-
-        }
-    }
-}
+        },
+    },
+};
