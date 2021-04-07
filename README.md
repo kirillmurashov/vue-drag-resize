@@ -43,10 +43,14 @@
 
 ## Install and basic usage
 
+For Vue2:
 ```bash
 $ npm i -s vue-drag-resize
 ```
-
+For Vue3:
+```bash
+$ npm i -s vue-drag-resize@next
+```
 
 Register the component:
 
