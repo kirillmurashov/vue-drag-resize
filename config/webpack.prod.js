@@ -1,24 +1,38 @@
-const paths = require('./paths');
-const { merge } = require('webpack-merge');
-const common = require('./webpack.common.js');
-
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const { merge } = require('webpack-merge');
+const paths = require('./paths');
+const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
     mode: 'production',
     devtool: false,
+
+    entry: [paths.src + '/index.js'],
+
     output: {
         path: paths.build,
+        filename: 'index.js',
         publicPath: '/',
-        filename: '[name].js',
+        library: {
+            name: 'VueDragResize',
+            type: 'umd'
+        }
     },
+
+    externals: {
+        vue: {
+            commonjs: 'vue',
+            commonjs2: 'vue',
+            root: 'Vue'
+        }
+    },
+
     module: {
         rules: [
             {
                 test: /\.css$/,
                 use: [
-                    MiniCssExtractPlugin.loader,
+                    'style-loader',
                     {
                         loader: 'css-loader',
                         options: {
@@ -32,14 +46,7 @@ module.exports = merge(common, {
             },
         ],
     },
-    plugins: [
-        // Extracts CSS into separate files
-        // Note: style-loader is for development, MiniCssExtractPlugin is for production
-        // new MiniCssExtractPlugin({
-        //     filename: 'styles/[name].css',
-        //     chunkFilename: '[id].css',
-        // }),
-    ],
+    plugins: [],
     optimization: {
         minimize: true,
         minimizer: [new CssMinimizerPlugin(), '...'],
