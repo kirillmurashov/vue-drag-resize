@@ -7,6 +7,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve --config config/webpack.dev.js",
     "build": "cross-env NODE_ENV=production webpack --config config/webpack.prod.js",
+    "build-demo": "cross-env NODE_ENV=production webpack --config config/webpack.demo.prod.js",
     "lint": "eslint . src config || true"
   },
   "repository": {
