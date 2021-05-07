@@ -1,7 +1,7 @@
 .vdr {
     position: absolute;
     box-sizing: border-box;
-    overflow: visible;
+
 }
 .vdr.active:before{
     content: '';

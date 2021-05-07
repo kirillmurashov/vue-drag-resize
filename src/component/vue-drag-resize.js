@@ -50,9 +50,6 @@ export default {
         isResizable: {
             type: Boolean, default: true,
         },
-        focusable: {
-            type: Boolean, default: false,
-        },
         aspectRatio: {
             type: Boolean, default: false,
         },
