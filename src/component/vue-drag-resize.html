@@ -1,9 +1,14 @@
-<div class="vdr" :style="style"
+<div class="vdr"
+     :style="positionStyle"
      :class="`${(active || isActive) ? 'active' : 'inactive'} ${contentClass ? contentClass: ''}`"
      @mousedown="bodyDown($event)"
      @touchstart="bodyDown($event)"
-     @touchend="up($event)">
-    <slot></slot>
+     @touchend="up($event)"
+     ref="container"
+     tabindex="0">
+    <div :style="sizeStyle" class="content-container" ref="container2">
+        <slot></slot>
+    </div>
     <div
             v-for="stick in sticks"
             class="vdr-stick"

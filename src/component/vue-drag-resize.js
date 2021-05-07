@@ -50,6 +50,9 @@ export default {
         isResizable: {
             type: Boolean, default: true,
         },
+        focusable: {
+            type: Boolean, default: false,
+        },
         aspectRatio: {
             type: Boolean, default: false,
         },
@@ -63,14 +66,14 @@ export default {
             type: Number,
             default: 50,
             validator(val) {
-                return val > 0;
+                return val >= 0;
             },
         },
         gridY: {
             type: Number,
             default: 50,
             validator(val) {
-                return val > 0;
+                return val >= 0;
             },
         },
         parentW: {
@@ -88,31 +91,31 @@ export default {
             },
         },
         w: {
-            type: Number,
+            type: [String, Number],
             default: 200,
             validator(val) {
-                return val > 0;
+                return (typeof val === 'string') ? val === 'auto' : val >= 0;
             },
         },
         h: {
-            type: Number,
+            type: [String, Number],
             default: 200,
             validator(val) {
-                return val > 0;
+                return (typeof val === 'string') ? val === 'auto' : val >= 0;
             },
         },
         minw: {
             type: Number,
             default: 50,
             validator(val) {
-                return val > 0;
+                return val >= 0;
             },
         },
         minh: {
             type: Number,
             default: 50,
             validator(val) {
-                return val > 0;
+                return val >= 0;
             },
         },
         x: {
@@ -166,6 +169,7 @@ export default {
 
     data() {
         return {
+            fixAspectRatio: null,
             active: null,
             zIndex: null,
             parentWidth: null,
@@ -199,8 +203,8 @@ export default {
 
         this.left = this.x;
         this.top = this.y;
-        this.right = this.parentWidth - this.w - this.left;
-        this.bottom = this.parentHeight - this.h - this.top;
+        this.right = this.parentWidth - (this.w === 'auto' ? this.$refs.container.scrollWidth : this.w) - this.left;
+        this.bottom = this.parentHeight - (this.h === 'auto' ? this.$refs.container.scrollHeight : this.h) - this.top;
 
         this.domEvents = new Map([
             ['mousemove', this.move],
@@ -679,13 +683,18 @@ export default {
     },
 
     computed: {
-        style() {
+        positionStyle() {
             return {
                 top: this.top + 'px',
                 left: this.left + 'px',
-                width: this.width + 'px',
-                height: this.height + 'px',
                 zIndex: this.zIndex,
+            };
+        },
+
+        sizeStyle(){
+            return {
+                width: this.width + 'px',
+                height: this.height + 'px'
             };
         },
 
