@@ -40,3 +40,7 @@
 .vdr-stick.not-resizable{
     display: none;
 }
+.content-container{
+    display: block;
+    position: relative;
+}
