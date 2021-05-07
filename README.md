@@ -109,6 +109,7 @@ Required: `false`<br>
 Default: `false`
 
 Determines whether the component should be active. 
+
 确定组件是否应处于活动状态。
 
 ```html
