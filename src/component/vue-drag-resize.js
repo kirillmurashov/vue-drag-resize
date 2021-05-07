@@ -397,8 +397,8 @@ export default {
             };
         },
 
-        stickDown(stick, ev) {
-            if (!this.isResizable || !this.active) {
+        stickDown(stick, ev, force = false) {
+            if ((!this.isResizable || !this.active) && !force) {
                 return;
             }
 
@@ -793,7 +793,7 @@ export default {
                 const stick = 'mr';
                 const delta = oldVal - newVal;
 
-                this.stickDown(stick, { pageX: this.right, pageY: this.top + (this.height / 2) });
+                this.stickDown(stick, { pageX: this.right, pageY: this.top + (this.height / 2) }, true);
                 this.stickMove({ x: delta, y: 0 });
 
                 this.$nextTick(() => {
@@ -811,7 +811,7 @@ export default {
                 const stick = 'bm';
                 const delta = oldVal - newVal;
 
-                this.stickDown(stick, { pageX: this.left + (this.width / 2), pageY: this.bottom });
+                this.stickDown(stick, { pageX: this.left + (this.width / 2), pageY: this.bottom }, true);
                 this.stickMove({ x: 0, y: delta });
 
                 this.$nextTick(() => {
