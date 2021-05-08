@@ -11,12 +11,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kirillmurashov/vue-drag-resize.git"
+    "url": "https://github.com/hinet/vue-drag-resize.git"
   },
   "bugs": {
-    "url": "https://github.com/kirillmurashov/vue-drag-resize/issues"
+    "url": "https://github.com/hinet/vue-drag-resize/issues"
   },
-  "homepage": "https://github.com/kirillmurashov/vue-drag-resize.git",
+  "homepage": "https://github.com/hinet/vue-drag-resize.git",
   "devDependencies": {
     "acorn-dynamic-import": "^3.0.0",
     "autoprefixer": "^6.7.2",
