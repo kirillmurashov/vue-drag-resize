@@ -689,8 +689,8 @@ export default {
 
         sizeStyle(){
             return {
-                width: this.width + 'px',
-                height: this.height + 'px'
+                width: this.w == 'auto' ? 'auto' : this.width + 'px',
+                height: this.h == 'auto' ? 'auto' : this.height + 'px'
             };
         },
 
