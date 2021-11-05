@@ -56,6 +56,14 @@ export default {
         parentLimitation: {
             type: Boolean, default: false,
         },
+        positionLimitation: {
+            type: Object, default: {
+                x1: null,
+                y1: null,
+                x2: null,
+                y2: null,
+            }
+        },
         snapToGrid: {
             type: Boolean, default: false,
         },
@@ -324,6 +332,18 @@ export default {
 
             this.saveDimensionsBeforeMove({ pointerX, pointerY });
 
+            console.warn('TEST CHECK this.positionLimitation');
+            console.log(this.positionLimitation);
+            if (
+                this.positionLimitation &&
+                this.positionLimitation.x1 !== null &&
+                this.positionLimitation.y1 !== null &&
+                this.positionLimitation.x2 !== null &&
+                this.positionLimitation.y2 !== null
+            ) {
+                this.limits = this.calcPositionLimitation();
+            }
+
             if (this.parentLimitation) {
                 this.limits = this.calcDragLimitation();
             }
@@ -541,6 +561,18 @@ export default {
                 right: { min: 0, max: parentWidth - this.width },
                 top: { min: 0, max: parentHeight - this.height },
                 bottom: { min: 0, max: parentHeight - this.height },
+            };
+        },
+
+        calcPositionLimitation() {
+            console.warn('HELLO calcPositionLimitation');
+            const { positionLimitation } = this;
+
+            return {
+                left: { min: positionLimitation.x2, max: positionLimitation.x1 - this.width },
+                right: { min: positionLimitation.x2, max: positionLimitation.x1 - this.width },
+                top: { min: positionLimitation.y2, max: positionLimitation.y1 - this.height },
+                bottom: { min: positionLimitation.y2, max: positionLimitation.y1 - this.height },
             };
         },
 
