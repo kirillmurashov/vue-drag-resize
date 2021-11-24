@@ -299,11 +299,11 @@ export default {
                 return;
             }
 
-            if (this.dragHandle && target.getAttribute('data-drag-handle') !== this._uid.toString()) {
+            if (this.dragHandle && target?.getAttribute('data-drag-handle') !== this._uid.toString()) {
                 return;
             }
 
-            if (this.dragCancel && target.getAttribute('data-drag-cancel') === this._uid.toString()) {
+            if (this.dragCancel && target?.getAttribute('data-drag-cancel') === this._uid.toString()) {
                 return;
             }
 
