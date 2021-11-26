@@ -311,10 +311,6 @@ export default {
                 ev.stopPropagation();
             }
 
-            if (typeof ev.preventDefault !== 'undefined') {
-                ev.preventDefault();
-            }
-
             if (this.isDraggable) {
                 this.bodyDrag = true;
             }
