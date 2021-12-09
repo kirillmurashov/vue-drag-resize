@@ -194,39 +194,40 @@ export default {
     },
 
     mounted() {
-        this.parentElement = this.$el.parentNode;
-        this.parentWidth = this.parentW ? this.parentW : this.parentElement.scrollWidth;
-        this.parentHeight = this.parentH ? this.parentH : this.parentElement.scrollHeight;
-
-        this.left = this.x;
-        this.top = this.y;
-        this.right = this.parentWidth - (this.w === 'auto' ? this.$refs.container.scrollWidth : this.w) - this.left;
-        this.bottom = this.parentHeight - (this.h === 'auto' ? this.$refs.container.scrollHeight : this.h) - this.top;
-
-        this.domEvents = new Map([
-            ['mousemove', this.move],
-            ['mouseup', this.up],
-            ['mouseleave', this.up],
-            ['mousedown', this.deselect],
-            ['touchmove', this.move],
-            ['touchend', this.up],
-            ['touchcancel', this.up],
-            ['touchstart', this.up],
-        ]);
-
-        addEvents(this.domEvents);
-
-        if (this.dragHandle) {
-            [...this.$el.querySelectorAll(this.dragHandle)].forEach((dragHandle) => {
-                dragHandle.setAttribute('data-drag-handle', this._uid);
-            });
-        }
-
-        if (this.dragCancel) {
-            [...this.$el.querySelectorAll(this.dragCancel)].forEach((cancelHandle) => {
-                cancelHandle.setAttribute('data-drag-cancel', this._uid);
-            });
-        }
+             this.$nextTick(() => {
+            this.parentElement = this.$el.parentNode;
+            this.parentWidth = this.parentW ? this.parentW : this.parentElement.scrollWidth;
+            this.parentHeight = this.parentH ? this.parentH : this.parentElement.scrollHeight;
+            this.left = this.x;
+            this.top = this.y;
+            this.right = this.parentWidth - (this.w === 'auto' ? this.$refs.container.scrollWidth : this.w) - this.left;
+            this.bottom = this.parentHeight - (this.h === 'auto' ? this.$refs.container.scrollHeight : this.h) - this.top;
+    
+            this.domEvents = new Map([
+                ['mousemove', this.move],
+                ['mouseup', this.up],
+                ['mouseleave', this.up],
+                ['mousedown', this.deselect],
+                ['touchmove', this.move],
+                ['touchend', this.up],
+                ['touchcancel', this.up],
+                ['touchstart', this.up],
+            ]);
+    
+            addEvents(this.domEvents);
+    
+            if (this.dragHandle) {
+                [...this.$el.querySelectorAll(this.dragHandle)].forEach((dragHandle) => {
+                    dragHandle.setAttribute('data-drag-handle', this._uid);
+                });
+            }
+    
+            if (this.dragCancel) {
+                [...this.$el.querySelectorAll(this.dragCancel)].forEach((cancelHandle) => {
+                    cancelHandle.setAttribute('data-drag-cancel', this._uid);
+                });
+            }
+        })
     },
 
     beforeUnmount() {
