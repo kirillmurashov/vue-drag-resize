@@ -195,8 +195,8 @@ export default {
 
     mounted() {
         this.parentElement = this.$el.parentNode;
-        this.parentWidth = this.parentW ? this.parentW : this.parentElement.clientWidth;
-        this.parentHeight = this.parentH ? this.parentH : this.parentElement.clientHeight;
+        this.parentWidth = this.parentW ? this.parentW : this.parentElement.scrollWidth;
+        this.parentHeight = this.parentH ? this.parentH : this.parentElement.scrollHeight;
 
         this.left = this.x;
         this.top = this.y;
