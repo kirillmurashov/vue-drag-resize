@@ -382,10 +382,10 @@ export default {
             this.$emit('dragging', this.rect);
         },
 
-        bodyUp() {
+        bodyUp(ev) {
             this.bodyDrag = false;
-            this.$emit('dragging', this.rect);
-            this.$emit('dragstop', this.rect);
+            this.$emit('dragging', this.rect, ev);
+            this.$emit('dragstop', this.rect, ev);
 
             this.dimensionsBeforeMove = { pointerX: 0, pointerY: 0, x: 0, y: 0, w: 0, h: 0 };
 
@@ -513,7 +513,7 @@ export default {
             this.$emit('resizing', this.rect);
         },
 
-        stickUp() {
+        stickUp(ev) {
             this.stickDrag = false;
             this.dimensionsBeforeMove = {
                 pointerX: 0,
@@ -530,8 +530,8 @@ export default {
                 bottom: { min: null, max: null },
             };
 
-            this.$emit('resizing', this.rect);
-            this.$emit('resizestop', this.rect);
+            this.$emit('resizing', this.rect, ev);
+            this.$emit('resizestop', this.rect, ev);
         },
 
         calcDragLimitation() {
