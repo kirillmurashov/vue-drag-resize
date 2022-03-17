@@ -50,6 +50,9 @@ export default {
         isResizable: {
             type: Boolean, default: true,
         },
+        isInteger: {
+            type: Boolean, default: true,
+        },
         aspectRatio: {
             type: Boolean, default: false,
         },
@@ -716,10 +719,10 @@ export default {
 
         rect() {
             return {
-                left: Math.round(this.left),
-                top: Math.round(this.top),
-                width: Math.round(this.width),
-                height: Math.round(this.height),
+                left: this.isInteger ? Math.round(this.left) : this.left,
+                top: this.isInteger ? Math.round(this.top) : this.top,
+                width: this.isInteger ? Math.round(this.width) : this.width,
+                height: this.isInteger ? Math.round(this.height) : this.height,
             };
         },
     },
