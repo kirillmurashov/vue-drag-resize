@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <div class="list" id="list">
+        <div class="list grid" id="list">
             <VueDragResize v-for="(rect, index) in rects"
                            :key="index"
                            :w="rect.width"
@@ -64,6 +64,12 @@
         right: 300px;
         box-shadow: 0 0 2px #AAA;
         background-color: white;
+    }
+
+    /* grid of the main panel */
+    .list.grid{
+        background-image: linear-gradient(chocolate 1px,transparent 1px),linear-gradient(90deg,chocolate 1px,transparent 1px);
+        background-size: 50px 50px;
     }
 
     .box-shaddow {
