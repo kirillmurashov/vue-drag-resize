@@ -44,3 +44,9 @@
     display: block;
     position: relative;
 }
+
+/* snapToGrid animation */
+.vdr.snapToGrid{
+	transition: all 0.3s;
+	transition-timing-function: ease;
+}

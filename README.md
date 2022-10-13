@@ -317,7 +317,7 @@ Default: `50`
 
 Define the minimal width of the component.
 
-定义组件的初始宽度。
+定义组件的最小宽度。
 
 
 
