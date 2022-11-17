@@ -81,7 +81,7 @@
     "gulp-run-sequence": "^0.3.2",
     "gulp-sourcemaps": "^2.6.1",
     "gulp-uglify": "^2.0.0",
-    "html-webpack-plugin": "^2.28.0",
+    "html-webpack-plugin": "^5.5.0",
     "http-proxy-middleware": "^0.17.3",
     "jade": "^1.11.0",
     "json-loader": "^0.5.4",
