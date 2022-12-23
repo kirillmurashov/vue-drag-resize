@@ -220,6 +220,7 @@ The drag/resize and the sticks' sizes will computed with this value.
 
 > 定义初始水平比例或父元素。父级的transform:scale（）css定义中的值相同。<br>
 拖动/调整大小和杆的大小将使用该值计算。
+
 ```html
 <vue-drag-resize :parentScaleX="0.5">
 ```
@@ -252,8 +253,6 @@ Determines whether the component should draggable.
 
 > 确定组件是否应可拖动。
 
----
-
 ```html
 <vue-drag-resize :isDraggable="false">
 ```
@@ -269,8 +268,6 @@ Determines whether the component should resize.
 
 > 确定组件是否应调整大小。
 
----
-
 ```html
 <vue-drag-resize :isResizable="false">
 ```
@@ -285,7 +282,6 @@ Default: `false`
 Limits the scope of the component's change to its parent size.
 
 > 将组件更改的范围限制为其父大小。
-
 
 ```html
 <vue-drag-resize :parentLimitation="true">
@@ -341,7 +337,6 @@ Determines whether the component should retain its proportions.
 
 > 确定组件是否应保持其比例。
 
-
 ```html
 <vue-drag-resize :aspectRatio="false">
 ```
@@ -358,7 +353,6 @@ The value can either be a number >= 0 or the string 'auto'. <br>
 If set to 'auto', the initial width value will be equal to the width of the content within the component.
 
 > 定义组件的初始宽度。
-
 
 ```html
 <vue-drag-resize :w="200">
@@ -377,8 +371,6 @@ If set to 'auto', the initial height value will be equal to the height of the co
 
 > 定义组件的初始高度。
 
-
-
 ```html
 <vue-drag-resize :h="200">
 ```
@@ -393,8 +385,6 @@ Default: `50`
 Define the minimal width of the component.
 
 > 定义组件的初始宽度。
-
-
 
 ```html
 <vue-drag-resize :minw="50">
@@ -427,7 +417,6 @@ Define the initial x position of the component.
 
 > 定义组件的初始X位置。
 
-
 ```html
 <vue-drag-resize :x="0">
 ```
@@ -442,7 +431,6 @@ Default: `0`
 Define the initial y position of the component.
 
 > 定义组件的初始Y位置。
-
 
 ```html
 <vue-drag-resize :y="0">
@@ -625,7 +613,6 @@ Called whenever the component gets resized.
 
 > 每当组件调整大小时调用。
 
-
 ```html
 <vue-drag-resize @resizing="onResizing">
 ```
@@ -648,7 +635,6 @@ Parameters: `object`
 Called whenever the component stops getting resized.
 
 > 每当组件停止调整大小时调用。
-
 
 ```html
 <vue-drag-resize @resizestop="onResizstop">
@@ -673,7 +659,6 @@ Called whenever the component gets dragged.
 
 > 每当拖动组件时调用。
 
-
 ```html
 <vue-drag-resize @dragging="onDragging">
 ```
@@ -693,7 +678,6 @@ Parameters: `object`
 }
 ```
 
-
 Called whenever the component stops getting dragged.
 
 > 每当组件停止拖动时调用。
@@ -702,7 +686,6 @@ Called whenever the component stops getting dragged.
 ```html
 <vue-drag-resize @dragstop="onDragstop">
 ```
-
 
 ## Contributing
 
