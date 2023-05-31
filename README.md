@@ -237,6 +237,8 @@ Default: `false`
 
 Determines whether the component should move and resize in predefined steps.
 
+确定组件是否应按预定义的步骤移动和调整大小。
+
 ```html
 <vue-drag-resize :snapToGrid="true">
 ```
@@ -248,6 +250,8 @@ Default: `50`
 
 Define the grid step size for the horizontal axis. Both sides of the component (left and right) will snap to this step.
 
+定义水平轴的栅格步长。组件的两侧（左侧和右侧）都将捕捉到此步骤。
+
 ```html
 <vue-drag-resize :snapToGrid="true" :gridX="20">
 ```
@@ -258,6 +262,8 @@ Required: `false`<br>
 Default: `50`
 
 Define the grid step size for the vertical axis. Both sides of the component (top and bottom) will snap to this step.
+
+定义垂直轴的栅格步长。组件的两侧（顶部和底部）将捕捉到此步骤。
 
 ```html
 <vue-drag-resize :snapToGrid="true" :gridY="20">
@@ -317,7 +323,7 @@ Default: `50`
 
 Define the minimal width of the component.
 
-定义组件的初始宽度。
+定义组件的最小宽度。
 
 
 
@@ -387,6 +393,8 @@ Default `8`
 
 Define the sticks' size.
 
+定义组件的尺寸。
+
 ```html
 <vue-drag-resize :stickSize="12">
 ```
@@ -455,6 +463,8 @@ Type: `String`<br>
 Required: `false`
 
 Defines a class that is applied on the div with the class vdr
+
+定义一个CSS类，应用于类名为vdr的div
 
 ```html
 <vue-drag-resize contentClass="box-shaddow">
